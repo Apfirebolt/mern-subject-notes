@@ -165,6 +165,78 @@ const deleteTopicFromSubject = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc    Add a Note to a Topic
+// @route   POST /api/subjects/:id/topics/:topicId
+// @access  Private
+const addNoteToTopic = asyncHandler(async (req, res) => {
+  const subject = await Subject.findOneAndUpdate({ _id: req.params.id, createdBy: req.user._id, "topics._id": req.params.topicId }, { "$push": {
+    "topics.$.notes": {...req.body}
+  } }, {
+    new: true
+  })
+  
+  if (subject) {
+    res.status(200).json({
+      subject,
+      message: 'Note added to Topic'
+    })
+  } else {
+    res.status(404)
+    throw new Error("Subject or Topic not found")
+  }
+})
+
+// @desc    Update a Note inside a Topic
+// @route   PUT /api/subjects/:id/topics/:topicId/notes/:noteId
+// @access  Private
+const updateNoteToTopic = asyncHandler(async (req, res) => {
+  const subject = await Subject.findOne({ 
+    _id: req.params.id, createdBy: req.user._id, "topics._id": req.params.topicId, 
+  })
+
+  if (subject) {
+    const relatedTopic = subject.topics.find((item) => toString(item._id) === toString(req.params.topicId))
+    const relatedNote = relatedTopic.notes.find((item) => toString(item._id) === toString(req.params.noteId))
+    
+    relatedNote.content = req.body.content
+    relatedNote.heading = req.body.heading
+
+    await subject.save()
+
+    res.status(200).json({
+      message: 'Note updated inside topic'
+    })
+  } else {
+    res.status(404)
+    throw new Error("Subject or Topic not found")
+  }
+})
+
+// @desc    Delete a Note inside a Topic
+// @route   DELETE /api/subjects/:id/topics/:topicId/notes/:noteId
+// @access  Private
+const deleteNoteFromTopic = asyncHandler(async (req, res) => {
+  const subject = await Subject.findOne({ 
+    _id: req.params.id, createdBy: req.user._id, "topics._id": req.params.topicId, 
+  })
+
+  if (subject) {
+    const relatedTopic = subject.topics.find((item) => toString(item._id) === toString(req.params.topicId))
+    const relatedNote = relatedTopic.notes.find((item) => toString(item._id) === toString(req.params.noteId))
+    
+    const relatedNoteIndex = relatedTopic.notes.indexOf(relatedNote)
+    relatedTopic.notes.splice(relatedNoteIndex, 1)
+    await subject.save()
+
+    res.status(200).json({
+      message: 'Note deleted from topic'
+    })
+  } else {
+    res.status(404)
+    throw new Error("Subject or Topic not found")
+  }
+})
+
 export { 
   addSubject, 
   getSubject, 
@@ -173,5 +245,8 @@ export {
   getAllSubjects,
   addTopicToSubject,
   updateTopicToSubject,
-  deleteTopicFromSubject 
+  deleteTopicFromSubject,
+  addNoteToTopic,
+  updateNoteToTopic,
+  deleteNoteFromTopic
 }

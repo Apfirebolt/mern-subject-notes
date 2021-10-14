@@ -26,7 +26,7 @@ const subjectSchema = new mongoose.Schema(
         },
         notes: [
           {
-            subjectName: {
+            heading: {
               type: String,
               required: true  
             },

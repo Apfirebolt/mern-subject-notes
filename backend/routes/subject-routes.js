@@ -8,7 +8,10 @@ import {
   getAllSubjects,
   addTopicToSubject,
   deleteTopicFromSubject,
-  updateTopicToSubject
+  updateTopicToSubject,
+  addNoteToTopic,
+  deleteNoteFromTopic,
+  updateNoteToTopic
 } from '../controllers/subject-controller.js'
 
 import { protect } from '../middleware/auth-middleware.js'
@@ -29,5 +32,12 @@ router
   .route('/:id/topics/:topicId')
   .put(protect, updateTopicToSubject)
   .delete(protect, deleteTopicFromSubject)
+router
+  .route('/:id/topics/:topicId')
+  .post(protect, addNoteToTopic)
+router
+  .route('/:id/topics/:topicId/notes/:noteId')
+  .put(protect, updateNoteToTopic)
+  .delete(protect, deleteNoteFromTopic)
 
 export default router
