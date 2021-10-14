@@ -5,7 +5,10 @@ import {
   deleteSubject,
   updateSubject,
   getSubject,
-  getAllSubjects
+  getAllSubjects,
+  addTopicToSubject,
+  deleteTopicFromSubject,
+  updateTopicToSubject
 } from '../controllers/subject-controller.js'
 
 import { protect } from '../middleware/auth-middleware.js'
@@ -19,5 +22,12 @@ router
   .get(protect, getSubject)
   .put(protect, updateSubject)
   .delete(protect, deleteSubject)
+router
+  .route('/:id/topics')
+  .post(protect, addTopicToSubject)
+router
+  .route('/:id/topics/:topicId')
+  .put(protect, updateTopicToSubject)
+  .delete(protect, deleteTopicFromSubject)
 
 export default router
