@@ -15,11 +15,12 @@ import {
 } from '../controllers/subject-controller.js'
 
 import { protect } from '../middleware/auth-middleware.js'
+import { validateSubject } from '../middleware/validate-subject.js'
 
 router
   .route('/')
   .get(protect, getAllSubjects)
-  .post(protect, addSubject)
+  .post(protect, validateSubject, addSubject)
 router
   .route('/:id')
   .get(protect, getSubject)
