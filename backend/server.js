@@ -9,6 +9,7 @@ import { notFound, errorHandler } from './middleware/error-handler.js'
 
 // import routes
 import authRoutes from './routes/auth-routes.js'
+import subjectRoutes from './routes/subject-routes.js'
 
 dotenv.config()
 
@@ -24,6 +25,7 @@ app.use(express.json())
 app.use(cors())
 
 app.use('/api/auth', authRoutes)
+app.use('/api/subjects', subjectRoutes)
 
 app.get('/', (req, res) => {
     res.json({ message: 'Success' })
@@ -38,7 +40,7 @@ const options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "LogRocket Express API with Swagger",
+      title: "Subject Notes Express API with Swagger",
       version: "0.1.0",
       description:
         "API for Subject Notes App in Express and React",
