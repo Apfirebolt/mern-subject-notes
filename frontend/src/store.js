@@ -10,7 +10,9 @@ import {
 import {
   addSubjectReducer,
   listSubjectReducer,
-  updateSubjectReducer
+  updateSubjectReducer,
+  deleteSubjectReducer,
+  detailSubjectReducer,
 } from './reducers/subjectReducers'
 
 const reducer = combineReducers({
@@ -18,7 +20,9 @@ const reducer = combineReducers({
   userRegister: userRegisterReducer,
   addSubject: addSubjectReducer,
   listSubject: listSubjectReducer,
-  updateSubject: updateSubjectReducer
+  updateSubject: updateSubjectReducer,
+  deleteSubject: deleteSubjectReducer,
+  detailSubject: detailSubjectReducer
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

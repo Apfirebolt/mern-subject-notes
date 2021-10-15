@@ -11,6 +11,8 @@ import {
   Button,
   Box,
   Link,
+  Heading,
+  Flex,
   useToast,
 } from "@chakra-ui/react";
 
@@ -38,10 +40,15 @@ const HeaderComponent = () => {
   }
 
   return (
-    <Box p={4}>
+    <Box p={4} bg="gray">
       {userInfo ? (
         <Menu>
-          <MenuButton as={Button}>Actions</MenuButton>
+          <Flex>
+            <Heading as="h4" size="md" color="white" m={2}>
+              Welcome, {userInfo.username}
+            </Heading>
+            <MenuButton as={Button}>Actions</MenuButton>
+          </Flex>
           <MenuList>
             <MenuItem>
               <Link as={ReachLink} to="/subjects">

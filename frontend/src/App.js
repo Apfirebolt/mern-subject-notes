@@ -7,6 +7,8 @@ import LoginPage from './pages/auth/Login'
 import RegisterPage from './pages/auth/Register'
 import ListSubjectPage from './pages/subjects/List'
 import AddSubjectPage from './pages/subjects/Add'
+import UpdateSubjectPage from './pages/subjects/Update'
+import DetailSubjectPage from './pages/subjects/Detail'
    
 const App = () => {
   return (
@@ -15,8 +17,10 @@ const App = () => {
         <Route path='/' component={HomePage} exact />
         <Route path='/login' component={LoginPage} />
         <Route path='/register' component={RegisterPage} />
-        <Route path='/subjects' component={ListSubjectPage} exact />
         <Route path='/subjects/add' component={AddSubjectPage} exact />
+        <Route path='/subjects' component={ListSubjectPage} exact />
+        <Route path='/subjects/:id/detail' component={DetailSubjectPage} exact />
+        <Route path='/subjects/:id/update' component={UpdateSubjectPage} exact />
       <Footer />
     </Router>
   )

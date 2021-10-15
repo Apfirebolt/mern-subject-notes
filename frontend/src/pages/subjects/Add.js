@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addSubjectAction } from '../../actions/subjectActions.js'
+import { ADD_SUBJECT_RESET } from "../../constants/subjectConstants";
 import {
   Input,
   FormControl,
@@ -34,6 +35,8 @@ const AddSubjectPage = ({ history }) => {
         status: 'success',
         isClosable: true,
       })
+      // Reset Add Subject Variable
+      dispatch({ type: ADD_SUBJECT_RESET })
       history.push('/subjects')
     } 
     if (error) {
@@ -43,7 +46,7 @@ const AddSubjectPage = ({ history }) => {
         isClosable: true,
       })
     }
-  }, [history, success, error, toast])
+  }, [dispatch, history, success, error, toast])
 
   const onSubmit = async (values) => {
     dispatch(addSubjectAction({...values}))
