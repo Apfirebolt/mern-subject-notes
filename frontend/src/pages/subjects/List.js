@@ -92,7 +92,6 @@ const SubjectListPage = ({ history }) => {
         </Heading>
         <ConfirmModal
           isModalOpened={isDeleteModalOpened}
-          openModal={openDeleteModal}
           closeModal={closeDeleteModal}
           confirmAction={confirmDeleteSubject}
           confirmMessage={deleteMessage}

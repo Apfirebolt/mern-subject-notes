@@ -11,7 +11,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 
-const ConfirmModalComponent = ({ isModalOpened, openModal, closeModal, confirmAction, confirmMessage, modalTitle }) => {
+const ConfirmModalComponent = ({ isModalOpened, closeModal, confirmAction, confirmMessage, modalTitle }) => {
 
   return (
     <>
@@ -35,7 +35,6 @@ const ConfirmModalComponent = ({ isModalOpened, openModal, closeModal, confirmAc
 
 ConfirmModalComponent.propTypes = {
   isModalOpened: PropTypes.bool,
-  openModal: PropTypes.func,
   closeModal: PropTypes.func,
   confirmAction: PropTypes.func,
   confirmMessage: PropTypes.string,

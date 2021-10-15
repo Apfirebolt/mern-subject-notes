@@ -15,7 +15,18 @@ import {
   UPDATE_SUBJECT_REQUEST,
   UPDATE_SUBJECT_SUCCESS,
   UPDATE_SUBJECT_FAIL,
-  UPDATE_SUBJECT_RESET,
+  ADD_TOPIC_REQUEST,
+  ADD_TOPIC_SUCCESS,
+  ADD_TOPIC_FAIL,
+  ADD_TOPIC_RESET,
+  UPDATE_TOPIC_REQUEST,
+  UPDATE_TOPIC_SUCCESS,
+  UPDATE_TOPIC_RESET,
+  UPDATE_TOPIC_FAIL,
+  DELETE_TOPIC_REQUEST,
+  DELETE_TOPIC_SUCCESS,
+  DELETE_TOPIC_RESET,
+  DELETE_TOPIC_FAIL,
 } from "../constants/subjectConstants";
 
 import { logout } from "./authActions";
@@ -188,6 +199,48 @@ export const detailSubjectAction = (subjectId) => async (dispatch, getState) => 
           error.response && error.response.data.message
             ? error.response.data.message
             : error.message,
+      });
+    }
+  };
+
+  // Actions for topics begin
+  export const addTopicAction = (payload) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ADD_TOPIC_REQUEST,
+      });
+  
+      const {
+        userLogin: { userInfo },
+      } = getState();
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      const { data } = await axiosInstance.post(`/api/subjects/${payload.id}/topics`, 
+      { 
+        topicName: payload.topicName, 
+        topicDescription: payload.topicDescription 
+      }, config);
+  
+      dispatch({
+        type: ADD_TOPIC_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
+      }
+      dispatch({
+        type: ADD_TOPIC_FAIL,
+        payload: message,
       });
     }
   };

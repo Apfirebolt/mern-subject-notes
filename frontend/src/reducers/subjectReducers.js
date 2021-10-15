@@ -18,6 +18,10 @@ import {
   DETAIL_SUBJECT_SUCCESS,
   DETAIL_SUBJECT_RESET,
   DETAIL_SUBJECT_FAIL,
+  ADD_TOPIC_REQUEST,
+  ADD_TOPIC_SUCCESS,
+  ADD_TOPIC_FAIL,
+  ADD_TOPIC_RESET
 } from "../constants/subjectConstants";
 
 export const addSubjectReducer = (state = {}, action) => {
@@ -92,3 +96,20 @@ export const detailSubjectReducer = (state = { subject: {} }, action) => {
       return state;
   }
 };
+
+// Reducers for topics
+export const addTopicReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ADD_TOPIC_REQUEST:
+      return { loading: true };
+    case ADD_TOPIC_SUCCESS:
+      return { loading: false, subject: action.payload, success: true };
+    case ADD_TOPIC_FAIL:
+      return { loading: false, error: action.payload };
+    case ADD_TOPIC_RESET:
+      return { subject: {} };
+    default:
+      return state;
+  }
+};
+
