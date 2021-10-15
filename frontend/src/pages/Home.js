@@ -1,22 +1,25 @@
-import React from "react";
-import { Stack, Button } from "@chakra-ui/react";
+import React, { Fragment } from "react";
+import { useSelector } from 'react-redux';
+import { Center, Button } from "@chakra-ui/react";
+import Loader from '../components/common/Loader'
 
 const HomePage = () => {
+
+  const userLogin = useSelector((state) => state.userLogin)
+  const { userInfo, loading } = userLogin
+  console.log('userinfo is', userInfo)
+
   return (
-    <Stack spacing={4} direction="row" align="center">
-      <Button colorScheme="teal" size="xs">
-        Button
-      </Button>
-      <Button colorScheme="teal" size="sm">
-        Button
-      </Button>
-      <Button colorScheme="teal" size="md">
-        Button
-      </Button>
-      <Button colorScheme="teal" size="lg">
-        Button
-      </Button>
-    </Stack>
+    <>
+      <h1>Home Page</h1>
+      {loading ? (
+        <Loader />
+      ) : (
+        <Fragment>
+          <p>Home page content is here</p>
+        </Fragment>
+      )}
+    </>
   );
 };
 

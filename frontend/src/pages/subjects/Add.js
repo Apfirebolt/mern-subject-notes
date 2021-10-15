@@ -1,55 +1,84 @@
 import { useForm } from "react-hook-form";
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-// import Message from '../components/Message'
-import Loader from '../../components/common/Loader'
-import { addSubject } from '../../actions/subjectActions.js'
+import { addSubjectAction } from '../../actions/subjectActions.js'
 import {
   Input,
   FormControl,
   FormLabel,
   Container,
-  FormErrorMessage,
   Button,
   Flex,
   Heading,
   Center,
+  FormErrorMessage,
+  useToast,
 } from "@chakra-ui/react";
 
-const AddSubjectPage = () => {
+const AddSubjectPage = ({ history }) => {
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useForm();
 
-  const [name, setName] = useState('');
-  const handleSubmit = async event => {
-    event.preventDefault();
-    const payload = {
-      name,
+  const toast = useToast();
+  const dispatch = useDispatch();
+  const addSubject = useSelector((state) => state.addSubject)
+  const { success, error, loading } = addSubject
+
+  useEffect(() => {
+    if (success) {
+      toast({
+        title: 'New Subject added successfully',
+        status: 'success',
+        isClosable: true,
+      })
+      history.push('/subjects')
+    } 
+    if (error) {
+      toast({
+        title: error,
+        status: 'error',
+        isClosable: true,
+      })
     }
-    await axios.post('http://localhost:5000/api/subjects', payload)
-  };
+  }, [history, success, error, toast])
+
+  const onSubmit = async (values) => {
+    dispatch(addSubjectAction({...values}))
+  }
+
   return (
     <Container p={5}>
       <Center color="tomato">
         <Heading as="h4" size="lg" my={2}>
-            ADD SUBJECT
+          Add Subject
         </Heading>
       </Center>
-      <form onSubmit={handleSubmit}>
-        {name}
-        <FormControl mt={2}>
-          <FormLabel htmlFor="name">Subject Name</FormLabel>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl isInvalid={errors.name} mt={2}>
+          <FormLabel htmlFor="email">Subject Name</FormLabel>
           <Input
             id="name"
+            type="name"
             placeholder="Enter Subject Name"
-            onChange={(e) => setName(e.target.value)}
+            {...register("name", {
+              required: "Subject name is required",
+              isEmail: "This must be valid email",
+            })}
           />
+          <FormErrorMessage>
+            {errors.email && errors.email.message}
+          </FormErrorMessage>
         </FormControl>
 
         <Flex justify="center">
           <Button
             mt={4}
             colorScheme="teal"
+            isLoading={loading}
             type="submit"
           >
             Add Subject

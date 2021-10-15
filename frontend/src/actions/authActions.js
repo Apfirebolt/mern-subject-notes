@@ -47,10 +47,12 @@ export const login = (payload) => async (dispatch) => {
 }
 
 export const logout = () => (dispatch) => {
-  localStorage.removeItem('userInfo')
-  dispatch({ type: USER_LOGOUT })
-  dispatch({ type: USER_DETAILS_RESET })
-  document.location.href = '/login'
+  setTimeout(() => {
+    localStorage.removeItem('userInfo')
+    dispatch({ type: USER_LOGOUT })
+    dispatch({ type: USER_DETAILS_RESET })
+    document.location.href = '/login'
+  }, 500)
 }
 
 export const register = (payload) => async (dispatch) => {
