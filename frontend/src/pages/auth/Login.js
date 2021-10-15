@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../actions/authActions';
+
 import {
   Input,
   FormControl,
@@ -7,33 +10,55 @@ import {
   Container,
   FormErrorMessage,
   Button,
+  Flex,
   Heading,
   Center,
+  useToast,
 } from "@chakra-ui/react";
 
-const LoginPage = () => {
+const LoginPage = ({ history }) => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
 
-  function onSubmit(values) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        resolve();
-      });
-    });
+  const toast = useToast();
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin)
+  const { loading, error, success } = userLogin
+
+  useEffect(() => {
+    if (success) {
+      toast({
+        title: 'Successfully logged in',
+        status: 'success',
+        isClosable: true,
+      })
+      history.push('/')
+    } 
+    if (error) {
+      toast({
+        title: error,
+        status: 'error',
+        isClosable: true,
+      })
+    }
+  }, [history, success, error, toast])
+
+  const onSubmit = async (values) => {
+    dispatch(login({...values}))
   }
+
   return (
     <Container p={5}>
       <Center color="tomato">
         <Heading as="h4" size="lg" my={2}>
-            LOGIN
+          LOGIN
         </Heading>
       </Center>
-      
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={errors.email} mt={2}>
           <FormLabel htmlFor="email">Email</FormLabel>
@@ -43,7 +68,7 @@ const LoginPage = () => {
             placeholder="Your Email"
             {...register("email", {
               required: "Email field is required",
-              isEmail: "This must be valid email"
+              isEmail: "This must be valid email",
             })}
           />
           <FormErrorMessage>
@@ -58,7 +83,7 @@ const LoginPage = () => {
             type="password"
             placeholder="Your Password"
             {...register("password", {
-              required: "Password field is required"
+              required: "Password field is required",
             })}
           />
           <FormErrorMessage>
@@ -66,14 +91,16 @@ const LoginPage = () => {
           </FormErrorMessage>
         </FormControl>
 
-        <Button
-          mt={4}
-          colorScheme="teal"
-          isLoading={isSubmitting}
-          type="submit"
-        >
-          Submit
-        </Button>
+        <Flex justify="center">
+          <Button
+            mt={4}
+            colorScheme="teal"
+            isLoading={loading}
+            type="submit"
+          >
+            Sign In
+          </Button>
+        </Flex>
       </form>
     </Container>
   );

@@ -1,5 +1,7 @@
-import React from "react";
 import { useForm } from "react-hook-form";
+import React from 'react'
+import axiosInstance from '../../plugins/interceptor'
+
 import {
   Input,
   FormControl,
@@ -8,33 +10,44 @@ import {
   Container,
   FormErrorMessage,
   Button,
+  Flex,
   Heading,
   Center,
+  useToast
 } from "@chakra-ui/react";
 
-const RegisterPage = () => {
+const RegisterPage = ({ history }) => {
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
   } = useForm();
 
-  function onSubmit(values) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        resolve();
-      });
-    });
+  const toast = useToast()
+
+  const onSubmit = async (values) => {
+    if (values.password !== values.confirmPassword) {
+      console.log('Passwords do not match')
+    } else {
+      // dispatch(register(values))
+      const userCreated = await axiosInstance.post('api/auth/register', values)
+      if (userCreated) {
+        toast({
+          title: 'Successfully registered, please login to continue',
+          status: 'success',
+          isClosable: true,
+        })
+        history.push("/login")
+      }
+    }
   }
   return (
     <Container p={5}>
       <Center color="tomato">
         <Heading as="h4" size="lg" my={2}>
-            REGISTER
+          REGISTER
         </Heading>
       </Center>
-      
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormControl isInvalid={errors.username} mt={2}>
           <FormLabel htmlFor="name">Username</FormLabel>
@@ -116,14 +129,16 @@ const RegisterPage = () => {
           </FormErrorMessage>
         </FormControl>
 
-        <Button
-          mt={4}
-          colorScheme="teal"
-          isLoading={isSubmitting}
-          type="submit"
-        >
-          Submit
-        </Button>
+        <Flex justify="center">
+          <Button
+            mt={4}
+            colorScheme="teal"
+            isLoading={isSubmitting}
+            type="submit"
+          >
+            Sign Up
+          </Button>
+        </Flex>
       </form>
     </Container>
   );

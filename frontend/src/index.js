@@ -1,17 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { Provider } from 'react-redux'
+import store from './store'
 import reportWebVitals from './reportWebVitals';
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react';
 import App from './App';
 
 ReactDOM.render(
   <React.StrictMode>
-   <ChakraProvider>
-     <ColorModeScript initialColorMode="light"></ColorModeScript>
-   <App />
-   </ChakraProvider>
-  </React.StrictMode>,
+    <Provider store={store}>
+      <ChakraProvider>
+        <App />
+        <ColorModeScript initialColorMode="light"></ColorModeScript>
+      </ChakraProvider>
+    </Provider>,
+    </React.StrictMode>,
   document.getElementById('root')
 );
 
@@ -21,5 +25,5 @@ ReactDOM.render(
 reportWebVitals();
 
 
-   
- 
+
+
