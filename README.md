@@ -16,7 +16,7 @@ This is a notes tracking web application I built to keep tracks of note-worthy p
 * [React](https://reactjs.org/)
 * [MongoDB](https://www.mongodb.com/)
 * [Redux](https://redux.js.org/)
-* [Bootstrap CSS](https://getbootstrap.com/)
+* [Chakra UI Kit](https://getbootstrap.com/)
 
 ## Authors
 
@@ -42,4 +42,37 @@ npm start
 
 ## Project Screenshots
 
-Please find some of the screenshots of the application. Below is the screenshot of the Home Page.
+Please find some of the screenshots of the application. Below is the screenshot of the Register Page.
+
+![alt text](./screenshots/register.png)
+
+Login Page.
+
+![alt text](./screenshots/register.png)
+
+Add Topic Modal, topics can be added within a subject through a modal. CRUD on Topics is supported
+
+![alt text](./screenshots/add_topic.png)
+
+Add Note Modal, notes can be added within a topic through a modal. CRUD on Notes is supported
+
+![alt text](./screenshots/add_note.png)
+
+Subject list page, user after successful login can add subjects which would house topics and notes.
+
+![alt text](./screenshots/subjects.png)
+
+Subject detail page, would contain list of all the topics within a subject.
+
+![alt text](./screenshots/subject_detail.png)
+
+Topic detail page, would contain list of all the notes within a topic.
+
+![alt text](./screenshots/topic_detail.png)
+
+Delete Subject modal. Similar modals for CRUD operations exist for notes and topics.
+
+![alt text](./screenshots/delete_subject.png)
+
+
+

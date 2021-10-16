@@ -1,22 +1,25 @@
 import React, { Fragment } from "react";
 import { useSelector } from 'react-redux';
-import { Center, Button } from "@chakra-ui/react";
+import { Heading, Text } from "@chakra-ui/react";
 import Loader from '../components/common/Loader'
 
 const HomePage = () => {
 
   const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo, loading } = userLogin
-  console.log('userinfo is', userInfo)
+  const { loading } = userLogin
 
   return (
     <>
-      <h1>Home Page</h1>
       {loading ? (
         <Loader />
       ) : (
         <Fragment>
-          <p>Home page content is here</p>
+          <Heading as="h2" size="2xl" my={3} p={3} color="gray.800" isTruncated>
+            Welcome to MERN Subject Notes App written in Express, React, MongoDB and Node
+          </Heading>
+          <Text fontSize="xl" m={3}>
+            Login and use the actions button to add Subjects, Topics with a Subject and Notes within a Topic.
+          </Text>
         </Fragment>
       )}
     </>

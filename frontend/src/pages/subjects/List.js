@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import DayJS from "react-dayjs";
 import { MdDelete, MdUpdate, MdPanoramaFishEye } from "react-icons/md";
 import { listSubjectsAction, deleteSubjectsAction } from "../../actions/subjectActions.js";
 import { DELETE_SUBJECT_RESET } from "../../constants/subjectConstants";
@@ -7,7 +8,7 @@ import Loader from "../../components/common/Loader";
 import ConfirmModal from "../../components/common/ConfirmModal";
 
 import {
-  Container,
+  Box,
   Heading,
   Center,
   useToast,
@@ -85,7 +86,7 @@ const SubjectListPage = ({ history }) => {
   }
 
   return (
-    <Container p={5} maxW="xl" centerContent>
+    <Box p={5} my={3} centerContent>
       <Center color="tomato">
         <Heading as="h4" size="lg" my={2}>
           All Subjects
@@ -115,7 +116,9 @@ const SubjectListPage = ({ history }) => {
               <Tr key={subject._id}>
                 <Td>{subject.name}</Td>
                 <Td>{subject.topics.length}</Td>
-                <Td>{subject.createdAt}</Td>
+                <Td>
+                  <DayJS format="MM-DD-YYYY">{subject.createdAt}</DayJS>
+                </Td>
                 <Td>
                   <Stack direction="row" spacing={4}>
                     <Button
@@ -148,7 +151,7 @@ const SubjectListPage = ({ history }) => {
           </Tbody>
         </Table>
       )}
-    </Container>
+    </Box>
   );
 };
 

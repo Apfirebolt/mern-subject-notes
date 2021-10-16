@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../actions/authActions';
+import { USER_LOGOUT } from "../../constants/authConstants";
 
 import {
   Input,
@@ -44,8 +45,9 @@ const LoginPage = ({ history }) => {
         status: 'error',
         isClosable: true,
       })
+      dispatch({ type: USER_LOGOUT })
     }
-  }, [history, success, error, toast])
+  }, [dispatch, history, success, error, toast])
 
   const onSubmit = async (values) => {
     dispatch(login({...values}))
