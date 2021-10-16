@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { MdDelete, MdUpdate, MdViewAgenda } from "react-icons/md";
 import {
   detailSubjectAction,
-  addTopicAction,
-  deleteTopicAction,
-  updateTopicAction,
+  addNoteAction,
+  deleteNoteAction,
+  updateNoteAction,
 } from "../../actions/subjectActions.js";
 import Loader from "../../components/common/Loader";
-import AddTopicModal from "../../components/subjects/AddTopicModal";
-import UpdateTopicModal from "../../components/subjects/AddTopicModal";
+import AddNoteModal from "../../components/notes/AddNoteModal";
+import UpdateNoteModal from "../../components/notes/AddNoteModal";
 import ConfirmModal from "../../components/common/ConfirmModal";
 import {
   DETAIL_SUBJECT_RESET,
@@ -27,7 +27,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-const TopicDetailPage = ({ history, match }) => {
+const TopicDetailPage = ({ match }) => {
   const toast = useToast();
   const dispatch = useDispatch();
   const [isAddNoteModalOpened, setIsAddNoteModalOpened] = useState(false);
@@ -132,7 +132,7 @@ const TopicDetailPage = ({ history, match }) => {
       subjectId: match.params.id,
       topicId: selectedNote._id
     }
-    dispatch(deleteTopicAction(payload))
+    dispatch(deleteNoteAction(payload))
     setIsDeleteNoteModalOpened(false);
   }
 
@@ -143,17 +143,18 @@ const TopicDetailPage = ({ history, match }) => {
       topicName: values.topicName,
       topicDescription: values.topicDescription
     }
-    dispatch(updateTopicAction(payload))
+    dispatch(updateNoteAction(payload))
     setIsUpdateNoteModalOpened(false)
   }
 
-  const addTopicConfirm = (data) => {
+  const addNoteConfirm = (data) => {
     const payload = {
-      id: match.params.id,
-      topicName: data.topicName,
-      topicDescription: data.topicDescription,
+      subjectId: match.params.id,
+      topicId: match.params.topicId,
+      heading: data.heading,
+      content: data.content,
     };
-    dispatch(addTopicAction(payload));
+    dispatch(addNoteAction(payload));
     closeAddTopicModal();
   };
 
@@ -172,22 +173,23 @@ const TopicDetailPage = ({ history, match }) => {
             <Button
               mt={4}
               colorScheme="teal"
+              onClick={() => openAddNoteModal()}
             >
               Add Note
             </Button>
           </Flex>
-          <AddTopicModal
+          <AddNoteModal
             isModalOpened={isAddNoteModalOpened}
             closeModal={closeAddTopicModal}
-            confirmAction={addTopicConfirm}
-            modalTitle="Add Topic"
+            confirmAction={addNoteConfirm}
+            modalTitle="Add Note"
           />
-          <UpdateTopicModal
+          <UpdateNoteModal
             isModalOpened={isUpdateNoteModalOpened}
             closeModal={closeUpdateTopicModal}
             confirmAction={updateTopicConfirm}
             modalTitle="Update Note"
-            selectedTopic={selectedNote}
+            selectedNote={selectedNote}
           />
           <ConfirmModal
             isModalOpened={isDeleteNoteModalOpened}

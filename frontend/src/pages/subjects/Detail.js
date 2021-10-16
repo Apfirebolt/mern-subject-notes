@@ -158,6 +158,10 @@ const SubjectDetailPage = ({ history, match }) => {
     closeAddTopicModal();
   };
 
+  const gotoTopicDetail = (topicId) => {
+    history.push(`/subjects/${subject._id}/topics/${topicId}`)
+  }
+
   return (
     <Box p={5} centerContent>
       <Center color="tomato">
@@ -213,6 +217,7 @@ const SubjectDetailPage = ({ history, match }) => {
                       m={1} 
                       bg="blue.300" 
                       rightIcon={<MdViewAgenda />}
+                      onClick={() => gotoTopicDetail(topic._id)}
                     >
                       View
                     </Button>
