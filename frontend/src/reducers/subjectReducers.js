@@ -30,6 +30,18 @@ import {
   UPDATE_TOPIC_SUCCESS,
   UPDATE_TOPIC_FAIL,
   UPDATE_TOPIC_RESET,
+  ADD_NOTE_REQUEST,
+  ADD_NOTE_SUCCESS,
+  ADD_NOTE_FAIL,
+  ADD_NOTE_RESET,
+  DELETE_NOTE_REQUEST,
+  DELETE_NOTE_RESET,
+  DELETE_NOTE_SUCCESS,
+  DELETE_NOTE_FAIL,
+  UPDATE_NOTE_REQUEST,
+  UPDATE_NOTE_SUCCESS,
+  UPDATE_NOTE_RESET,
+  UPDATE_NOTE_FAIL,
 } from "../constants/subjectConstants";
 
 export const addSubjectReducer = (state = {}, action) => {
@@ -111,11 +123,11 @@ export const addTopicReducer = (state = {}, action) => {
     case ADD_TOPIC_REQUEST:
       return { loading: true };
     case ADD_TOPIC_SUCCESS:
-      return { loading: false, subject: action.payload, success: true };
+      return { loading: false, success: true };
     case ADD_TOPIC_FAIL:
       return { loading: false, error: action.payload };
     case ADD_TOPIC_RESET:
-      return { subject: {} };
+      return {};
     default:
       return state;
   }
@@ -150,4 +162,51 @@ export const updateTopicReducer = (state = {}, action) => {
       return state;
   }
 };
+
+// Reducers for Notes
+export const addNoteReducer = (state = {}, action) => {
+  switch (action.type) {
+    case ADD_NOTE_REQUEST:
+      return { loading: true };
+    case ADD_NOTE_SUCCESS:
+      return { loading: false, success: true };
+    case ADD_NOTE_FAIL:
+      return { loading: false, error: action.payload };
+    case ADD_NOTE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const deleteNoteReducer = (state = {}, action) => {
+  switch (action.type) {
+    case DELETE_NOTE_REQUEST:
+      return { loading: true };
+    case DELETE_NOTE_SUCCESS:
+      return { loading: false, success: true };
+    case DELETE_NOTE_FAIL:
+      return { loading: false, error: action.payload };
+    case DELETE_NOTE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
+export const updateNoteReducer = (state = {}, action) => {
+  switch (action.type) {
+    case UPDATE_NOTE_REQUEST:
+      return { loading: true };
+    case UPDATE_NOTE_SUCCESS:
+      return { loading: false, success: true };
+    case UPDATE_NOTE_FAIL:
+      return { loading: false, error: action.payload };
+    case UPDATE_NOTE_RESET:
+      return {};
+    default:
+      return state;
+  }
+};
+
 

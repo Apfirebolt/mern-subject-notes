@@ -18,15 +18,21 @@ import {
   ADD_TOPIC_REQUEST,
   ADD_TOPIC_SUCCESS,
   ADD_TOPIC_FAIL,
-  ADD_TOPIC_RESET,
   UPDATE_TOPIC_REQUEST,
   UPDATE_TOPIC_SUCCESS,
-  UPDATE_TOPIC_RESET,
   UPDATE_TOPIC_FAIL,
   DELETE_TOPIC_REQUEST,
   DELETE_TOPIC_SUCCESS,
-  DELETE_TOPIC_RESET,
   DELETE_TOPIC_FAIL,
+  ADD_NOTE_REQUEST,
+  ADD_NOTE_SUCCESS,
+  ADD_NOTE_FAIL,
+  UPDATE_NOTE_REQUEST,
+  UPDATE_NOTE_SUCCESS,
+  UPDATE_NOTE_FAIL,
+  DELETE_NOTE_REQUEST,
+  DELETE_NOTE_SUCCESS,
+  DELETE_NOTE_FAIL
 } from "../constants/subjectConstants";
 
 import { logout } from "./authActions";
@@ -318,6 +324,126 @@ export const detailSubjectAction = (subjectId) => async (dispatch, getState) => 
       }
       dispatch({
         type: DELETE_TOPIC_FAIL,
+        payload: message,
+      });
+    }
+  };
+
+  // Actions for notes
+  export const addNoteAction = (payload) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: ADD_NOTE_REQUEST,
+      });
+  
+      const {
+        userLogin: { userInfo },
+      } = getState();
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      const { data } = await axiosInstance.post(`/api/subjects/${payload.subjectId}/topics/${payload.topicId}`, 
+      { 
+        heading: payload.heading, 
+        content: payload.content 
+      }, config);
+  
+      dispatch({
+        type: ADD_NOTE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
+      }
+      dispatch({
+        type: ADD_NOTE_FAIL,
+        payload: message,
+      });
+    }
+  };
+
+  export const updateNoteAction = (payload) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: UPDATE_NOTE_REQUEST,
+      });
+  
+      const {
+        userLogin: { userInfo },
+      } = getState();
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      const { data } = await axiosInstance.put(`/api/subjects/${payload.subjectId}/topics/${payload.topicId}/notes/${payload.noteId}`, 
+      { 
+        heading: payload.heading, 
+        content: payload.content 
+      }, config);
+  
+      dispatch({
+        type: UPDATE_NOTE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
+      }
+      dispatch({
+        type: UPDATE_NOTE_FAIL,
+        payload: message,
+      });
+    }
+  };
+
+  export const deleteNoteAction = (payload) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: DELETE_NOTE_REQUEST,
+      });
+  
+      const {
+        userLogin: { userInfo },
+      } = getState();
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      const { data } = await axiosInstance.delete(`/api/subjects/${payload.subjectId}/topics/${payload.topicId}/notes/${payload.noteId}`, config);
+  
+      dispatch({
+        type: DELETE_NOTE_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
+      }
+      dispatch({
+        type: DELETE_NOTE_FAIL,
         payload: message,
       });
     }
