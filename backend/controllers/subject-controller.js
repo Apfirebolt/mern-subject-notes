@@ -101,6 +101,25 @@ const getSubject = asyncHandler(async (req, res) => {
   }
 })
 
+// @desc    Get a Topic to a subject
+// @route   GET /api/subjects/:id/topics/:topicId
+// @access  Private
+const getTopicToSubject = asyncHandler(async (req, res) => {
+  const subject = await Subject.findOne({ _id: req.params.id, createdBy: req.user._id }, {
+    topics: {
+      "$elemMatch": {
+        "_id": req.params.topicId
+      }
+    }
+  })
+  if (subject) {
+    res.status(200).json(subject.topics[0])
+  } else {
+    res.status(404)
+    throw new Error("Subject or Topic not found")
+  }
+})
+
 // @desc    Add a Topic to a subject
 // @route   POST /api/subjects/:id/topics
 // @access  Private
@@ -246,6 +265,7 @@ export {
   addTopicToSubject,
   updateTopicToSubject,
   deleteTopicFromSubject,
+  getTopicToSubject,
   addNoteToTopic,
   updateNoteToTopic,
   deleteNoteFromTopic

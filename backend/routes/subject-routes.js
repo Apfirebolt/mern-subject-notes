@@ -6,6 +6,7 @@ import {
   updateSubject,
   getSubject,
   getAllSubjects,
+  getTopicToSubject,
   addTopicToSubject,
   deleteTopicFromSubject,
   updateTopicToSubject,
@@ -31,6 +32,7 @@ router
   .post(protect, addTopicToSubject)
 router
   .route('/:id/topics/:topicId')
+  .get(protect, getTopicToSubject)
   .put(protect, updateTopicToSubject)
   .delete(protect, deleteTopicFromSubject)
 router

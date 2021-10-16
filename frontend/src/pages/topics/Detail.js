@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MdDelete, MdUpdate, MdViewAgenda } from "react-icons/md";
 import {
-  detailSubjectAction,
+  getTopicAction,
   addNoteAction,
   deleteNoteAction,
   updateNoteAction,
@@ -25,6 +25,7 @@ import {
   useToast,
   Flex,
   Button,
+  Grid,
 } from "@chakra-ui/react";
 
 const TopicDetailPage = ({ match }) => {
@@ -36,8 +37,8 @@ const TopicDetailPage = ({ match }) => {
   const [deleteMessage, setDeleteMessage] = useState('');
   const [selectedNote, setSelectedNote] = useState({});
 
-  const detailSubject = useSelector((state) => state.detailSubject);
-  const { error, subject, loading } = detailSubject;
+  const getTopic = useSelector((state) => state.getTopic);
+  const { error, topic, loading } = getTopic;
 
   const addNote = useSelector((state) => state.addNote);
   const { error: noteError, success: noteSuccess } = addNote;
@@ -56,7 +57,7 @@ const TopicDetailPage = ({ match }) => {
         isClosable: true,
       });
       dispatch({ type: DELETE_NOTE_RESET });
-      dispatch(detailSubjectAction(match.params.id));
+      dispatch(getTopicAction(match.params.id, match.params.topicId));
     }
   }, [dispatch, match, toast, noteDeleteSuccess]);
 
@@ -68,19 +69,19 @@ const TopicDetailPage = ({ match }) => {
         isClosable: true,
       });
       dispatch({ type: UPDATE_NOTE_RESET });
-      dispatch(detailSubjectAction(match.params.id));
+      dispatch(getTopicAction(match.params.id, match.params.topicId));
     }
   }, [dispatch, match, toast, noteUpdateSuccess]);
 
   useEffect(() => {
     if (noteSuccess) {
       toast({
-        title: "Note successfully added to the subject",
+        title: "Note successfully added to the topic",
         status: "success",
         isClosable: true,
       });
       dispatch({ type: ADD_NOTE_RESET });
-      dispatch(detailSubjectAction(match.params.id));
+      dispatch(getTopicAction(match.params.id, match.params.topicId));
     }
   }, [dispatch, match, toast, noteSuccess]);
 
@@ -95,7 +96,7 @@ const TopicDetailPage = ({ match }) => {
       dispatch({ type: UPDATE_NOTE_RESET });
       dispatch({ type: DETAIL_SUBJECT_RESET });
     }
-    dispatch(detailSubjectAction(match.params.id));
+    dispatch(getTopicAction(match.params.id, match.params.topicId));
   }, [dispatch, match, error, noteError, noteUpdateError, noteDeleteError, toast]);
 
   const openAddNoteModal = () => {
@@ -114,17 +115,17 @@ const TopicDetailPage = ({ match }) => {
     setIsDeleteNoteModalOpened(false);
   };
 
-  const deleteNoteHelper = (topicId) => {
+  const deleteNoteHelper = (noteId) => {
     setIsDeleteNoteModalOpened(true);
-    const selectedTopic = subject.topics.find((item) => item._id === topicId)
-    setSelectedNote(selectedTopic)
-    setDeleteMessage(`Are you sure you want to delete topic named ${selectedTopic.topicName} ?`)
+    const selectedNote = topic.notes.find((item) => item._id === noteId)
+    setSelectedNote(selectedNote)
+    setDeleteMessage(`Are you sure you want to delete note titled ${selectedNote.heading} ?`)
   }
 
-  const updateNoteHelper = (topicId) => {
+  const updateNoteHelper = (noteId) => {
     setIsUpdateNoteModalOpened(true);
-    const selectedTopic = subject.topics.find((item) => item._id === topicId)
-    setSelectedNote(selectedTopic)
+    const selectedNote = topic.notes.find((item) => item._id === noteId)
+    setSelectedNote(selectedNote)
   }
 
   const deleteTopicConfirm = () => {
@@ -162,7 +163,7 @@ const TopicDetailPage = ({ match }) => {
     <Box p={5} centerContent>
       <Center color="tomato">
         <Heading as="h4" size="lg" my={2}>
-          Topic Detail
+          {topic && topic.topicName}
         </Heading>
       </Center>
       {loading ? (
@@ -178,6 +179,46 @@ const TopicDetailPage = ({ match }) => {
               Add Note
             </Button>
           </Flex>
+          <Grid templateColumns="repeat(1, 1fr)" gap={6} my={3}>
+            {topic &&
+              topic.notes &&
+              topic.notes.map((note) => (
+                <Box
+                  key={note._id}
+                  w="100%"
+                  bg="green.100"
+                  boxShadow="md" 
+                  rounded="md"
+                  color="gray.700"
+                  px={2}
+                  py={4}
+                >
+                  <Center>
+                    <Heading as="h4" size="md" my={2}>
+                      {note.heading}
+                    </Heading>
+                  </Center>
+                  <Center>
+                    {note.heading} - {note.content}
+                  </Center>
+                  <Flex justify="center" mt={3}>
+                    <Button 
+                      m={1} 
+                      bg="blue.400" 
+                      rightIcon={<MdUpdate />}
+                      onClick={() => updateNoteHelper(note._id)}
+                    >
+                      Update
+                    </Button>
+                    <Button 
+                      m={1} 
+                      rightIcon={<MdDelete />}
+                      onClick={() => deleteNoteHelper(note._id)}
+                    >Delete</Button>
+                  </Flex>
+                </Box>
+              ))}
+          </Grid>
           <AddNoteModal
             isModalOpened={isAddNoteModalOpened}
             closeModal={closeAddTopicModal}

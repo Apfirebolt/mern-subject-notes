@@ -15,6 +15,9 @@ import {
   UPDATE_SUBJECT_REQUEST,
   UPDATE_SUBJECT_SUCCESS,
   UPDATE_SUBJECT_FAIL,
+  GET_TOPIC_REQUEST,
+  GET_TOPIC_SUCCESS,
+  GET_TOPIC_FAIL,
   ADD_TOPIC_REQUEST,
   ADD_TOPIC_SUCCESS,
   ADD_TOPIC_FAIL,
@@ -210,6 +213,43 @@ export const detailSubjectAction = (subjectId) => async (dispatch, getState) => 
   };
 
   // Actions for topics begin
+  export const getTopicAction = (subjectId, topicId) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: GET_TOPIC_REQUEST,
+      });
+  
+      const {
+        userLogin: { userInfo },
+      } = getState();
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      const { data } = await axiosInstance.get(`/api/subjects/${subjectId}/topics/${topicId}`, config);
+  
+      dispatch({
+        type: GET_TOPIC_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
+      }
+      dispatch({
+        type: GET_TOPIC_FAIL,
+        payload: message,
+      });
+    }
+  };
+
   export const addTopicAction = (payload) => async (dispatch, getState) => {
     try {
       dispatch({

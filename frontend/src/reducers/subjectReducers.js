@@ -42,6 +42,10 @@ import {
   UPDATE_NOTE_SUCCESS,
   UPDATE_NOTE_RESET,
   UPDATE_NOTE_FAIL,
+  GET_TOPIC_REQUEST,
+  GET_TOPIC_FAIL,
+  GET_TOPIC_SUCCESS,
+  GET_TOPIC_RESET
 } from "../constants/subjectConstants";
 
 export const addSubjectReducer = (state = {}, action) => {
@@ -118,6 +122,21 @@ export const detailSubjectReducer = (state = { subject: {} }, action) => {
 };
 
 // Reducers for topics
+export const getTopicReducer = (state = { topic: {} }, action) => {
+  switch (action.type) {
+    case GET_TOPIC_REQUEST:
+      return { loading: true };
+    case GET_TOPIC_SUCCESS:
+      return { loading: false, topic: action.payload };
+    case GET_TOPIC_FAIL:
+      return { loading: false, error: action.payload };
+    case GET_TOPIC_RESET:
+      return { topic: {} };
+    default:
+      return state;
+  }
+};
+
 export const addTopicReducer = (state = {}, action) => {
   switch (action.type) {
     case ADD_TOPIC_REQUEST:
