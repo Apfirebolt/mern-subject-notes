@@ -14,6 +14,8 @@ import ConfirmModal from "../../components/common/ConfirmModal";
 import {
   DETAIL_SUBJECT_RESET,
   ADD_TOPIC_RESET,
+  DELETE_TOPIC_RESET,
+  UPDATE_TOPIC_RESET,
 } from "../../constants/subjectConstants";
 
 import {
@@ -44,8 +46,32 @@ const SubjectDetailPage = ({ history, match }) => {
   const deleteTopic = useSelector((state) => state.deleteTopic);
   const { error: topicDeleteError, success: topicDeleteSuccess } = deleteTopic;
 
-  const updateTopic = useSelector((state) => state.addTopic);
+  const updateTopic = useSelector((state) => state.updateTopic);
   const { error: topicUpdateError, success: topicUpdateSuccess } = updateTopic;
+
+  useEffect(() => {
+    if (topicDeleteSuccess) {
+      toast({
+        title: "Topic successfully deleted",
+        status: "success",
+        isClosable: true,
+      });
+      dispatch({ type: DELETE_TOPIC_RESET });
+      dispatch(detailSubjectAction(match.params.id));
+    }
+  }, [dispatch, match, toast, topicDeleteSuccess]);
+
+  useEffect(() => {
+    if (topicUpdateSuccess) {
+      toast({
+        title: "Topic inside the subject successfully updated",
+        status: "success",
+        isClosable: true,
+      });
+      dispatch({ type: UPDATE_TOPIC_RESET });
+      dispatch(detailSubjectAction(match.params.id));
+    }
+  }, [dispatch, match, toast, topicUpdateSuccess]);
 
   useEffect(() => {
     if (topicSuccess) {
@@ -60,16 +86,18 @@ const SubjectDetailPage = ({ history, match }) => {
   }, [dispatch, match, toast, topicSuccess]);
 
   useEffect(() => {
-    if (error || topicError) {
+    if (error || topicError || topicUpdateError || topicDeleteError) {
       toast({
         title: error,
         status: "error",
         isClosable: true,
       });
+      dispatch({ type: DELETE_TOPIC_RESET });
+      dispatch({ type: UPDATE_TOPIC_RESET });
       dispatch({ type: DETAIL_SUBJECT_RESET });
     }
     dispatch(detailSubjectAction(match.params.id));
-  }, [dispatch, match, error, topicError, toast]);
+  }, [dispatch, match, error, topicError, topicUpdateError, topicDeleteError, toast]);
 
   const openAddTopicModal = () => {
     setIsAddTopicModalOpened(true);
@@ -106,6 +134,7 @@ const SubjectDetailPage = ({ history, match }) => {
       topicId: selectedTopic._id
     }
     dispatch(deleteTopicAction(payload))
+    setIsDeleteTopicModalOpened(false);
   }
 
   const updateTopicConfirm = (values) => {
@@ -116,6 +145,7 @@ const SubjectDetailPage = ({ history, match }) => {
       topicDescription: values.topicDescription
     }
     dispatch(updateTopicAction(payload))
+    setIsUpdateTopicModalOpened(false)
   }
 
   const addTopicConfirm = (data) => {

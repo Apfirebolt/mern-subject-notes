@@ -261,7 +261,7 @@ export const detailSubjectAction = (subjectId) => async (dispatch, getState) => 
         },
       };
   
-      const { data } = await axiosInstance.post(`/api/subjects/${payload.id}/topics`, 
+      const { data } = await axiosInstance.put(`/api/subjects/${payload.subjectId}/topics/${payload.topicId}`, 
       { 
         topicName: payload.topicName, 
         topicDescription: payload.topicDescription 
@@ -302,11 +302,7 @@ export const detailSubjectAction = (subjectId) => async (dispatch, getState) => 
         },
       };
   
-      const { data } = await axiosInstance.post(`/api/subjects/${payload.id}/topics`, 
-      { 
-        topicName: payload.topicName, 
-        topicDescription: payload.topicDescription 
-      }, config);
+      const { data } = await axiosInstance.delete(`/api/subjects/${payload.subjectId}/topics/${payload.topicId}`, config);
   
       dispatch({
         type: DELETE_TOPIC_SUCCESS,
