@@ -244,3 +244,85 @@ export const detailSubjectAction = (subjectId) => async (dispatch, getState) => 
       });
     }
   };
+
+  export const updateTopicAction = (payload) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: UPDATE_TOPIC_REQUEST,
+      });
+  
+      const {
+        userLogin: { userInfo },
+      } = getState();
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      const { data } = await axiosInstance.post(`/api/subjects/${payload.id}/topics`, 
+      { 
+        topicName: payload.topicName, 
+        topicDescription: payload.topicDescription 
+      }, config);
+  
+      dispatch({
+        type: UPDATE_TOPIC_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
+      }
+      dispatch({
+        type: UPDATE_TOPIC_FAIL,
+        payload: message,
+      });
+    }
+  };
+
+  export const deleteTopicAction = (payload) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: DELETE_TOPIC_REQUEST,
+      });
+  
+      const {
+        userLogin: { userInfo },
+      } = getState();
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+  
+      const { data } = await axiosInstance.post(`/api/subjects/${payload.id}/topics`, 
+      { 
+        topicName: payload.topicName, 
+        topicDescription: payload.topicDescription 
+      }, config);
+  
+      dispatch({
+        type: DELETE_TOPIC_SUCCESS,
+        payload: data,
+      });
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      if (message === "Not authorized, token failed") {
+        dispatch(logout());
+      }
+      dispatch({
+        type: DELETE_TOPIC_FAIL,
+        payload: message,
+      });
+    }
+  };
