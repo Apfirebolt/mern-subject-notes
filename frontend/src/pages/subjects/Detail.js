@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MdDelete, MdUpdate, MdPanoramaFishEye } from "react-icons/md";
+import { MdDelete, MdUpdate, MdViewAgenda } from "react-icons/md";
 import {
   detailSubjectAction,
   addTopicAction,
+  deleteTopicAction,
+  updateTopicAction,
 } from "../../actions/subjectActions.js";
 import Loader from "../../components/common/Loader";
 import AddTopicModal from "../../components/subjects/AddTopicModal";
+import UpdateTopicModal from "../../components/subjects/AddTopicModal";
+import ConfirmModal from "../../components/common/ConfirmModal";
 import {
   DETAIL_SUBJECT_RESET,
   ADD_TOPIC_RESET,
@@ -26,12 +30,22 @@ const SubjectDetailPage = ({ history, match }) => {
   const toast = useToast();
   const dispatch = useDispatch();
   const [isAddTopicModalOpened, setIsAddTopicModalOpened] = useState(false);
+  const [isDeleteTopicModalOpened, setIsDeleteTopicModalOpened] = useState(false);
+  const [isUpdateTopicModalOpened, setIsUpdateTopicModalOpened] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState('');
+  const [selectedTopic, setSelectedTopic] = useState({});
 
   const detailSubject = useSelector((state) => state.detailSubject);
   const { error, subject, loading } = detailSubject;
 
   const addTopic = useSelector((state) => state.addTopic);
   const { error: topicError, success: topicSuccess } = addTopic;
+
+  const deleteTopic = useSelector((state) => state.deleteTopic);
+  const { error: topicDeleteError, success: topicDeleteSuccess } = deleteTopic;
+
+  const updateTopic = useSelector((state) => state.addTopic);
+  const { error: topicUpdateError, success: topicUpdateSuccess } = updateTopic;
 
   useEffect(() => {
     if (topicSuccess) {
@@ -64,6 +78,45 @@ const SubjectDetailPage = ({ history, match }) => {
   const closeAddTopicModal = () => {
     setIsAddTopicModalOpened(false);
   };
+
+  const closeUpdateTopicModal = () => {
+    setIsUpdateTopicModalOpened(false);
+  };
+
+  const closeDeleteTopicModal = () => {
+    setIsDeleteTopicModalOpened(false);
+  };
+
+  const deleteTopicHelper = (topicId) => {
+    setIsDeleteTopicModalOpened(true);
+    const selectedTopic = subject.topics.find((item) => item._id === topicId)
+    setSelectedTopic(selectedTopic)
+    setDeleteMessage(`Are you sure you want to delete topic named ${selectedTopic.topicName} ?`)
+  }
+
+  const updateTopicHelper = (topicId) => {
+    setIsUpdateTopicModalOpened(true);
+    const selectedTopic = subject.topics.find((item) => item._id === topicId)
+    setSelectedTopic(selectedTopic)
+  }
+
+  const deleteTopicConfirm = () => {
+    const payload = {
+      subjectId: match.params.id,
+      topicId: selectedTopic._id
+    }
+    dispatch(deleteTopicAction(payload))
+  }
+
+  const updateTopicConfirm = (values) => {
+    const payload = {
+      subjectId: match.params.id,
+      topicId: selectedTopic._id,
+      topicName: values.topicName,
+      topicDescription: values.topicDescription
+    }
+    dispatch(updateTopicAction(payload))
+  }
 
   const addTopicConfirm = (data) => {
     const payload = {
@@ -118,10 +171,26 @@ const SubjectDetailPage = ({ history, match }) => {
                     {topic.topicName} - {topic.topicDescription}
                   </Center>
                   <Flex justify="center" mt={3}>
-                    <Button m={1} bg="green.400" rightIcon={<MdUpdate />}>
+                    <Button 
+                      m={1} 
+                      bg="green.400" 
+                      rightIcon={<MdUpdate />}
+                      onClick={() => updateTopicHelper(topic._id)}
+                    >
                       Update
                     </Button>
-                    <Button m={1} rightIcon={<MdDelete />}>Delete</Button>
+                    <Button 
+                      m={1} 
+                      bg="blue.300" 
+                      rightIcon={<MdViewAgenda />}
+                    >
+                      View
+                    </Button>
+                    <Button 
+                      m={1} 
+                      rightIcon={<MdDelete />}
+                      onClick={() => deleteTopicHelper(topic._id)}
+                    >Delete</Button>
                   </Flex>
                 </Box>
               ))}
@@ -131,6 +200,20 @@ const SubjectDetailPage = ({ history, match }) => {
             closeModal={closeAddTopicModal}
             confirmAction={addTopicConfirm}
             modalTitle="Add Topic"
+          />
+          <UpdateTopicModal
+            isModalOpened={isUpdateTopicModalOpened}
+            closeModal={closeUpdateTopicModal}
+            confirmAction={updateTopicConfirm}
+            modalTitle="Update Topic"
+            selectedTopic={selectedTopic}
+          />
+          <ConfirmModal
+            isModalOpened={isDeleteTopicModalOpened}
+            closeModal={closeDeleteTopicModal}
+            confirmAction={deleteTopicConfirm}
+            confirmMessage={deleteMessage}
+            modalTitle="Delete Topic"
           />
         </Box>
       )}

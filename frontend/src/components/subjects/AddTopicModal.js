@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useForm } from "react-hook-form";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -21,12 +21,23 @@ const AddTopicModalComponent = ({
   closeModal,
   confirmAction,
   modalTitle,
+  selectedTopic
 }) => {
   const {
     handleSubmit,
     register,
+    reset,
     formState: { errors },
   } = useForm();
+
+  useEffect(() => {
+    if (selectedTopic) {
+      reset({
+        topicName: selectedTopic.topicName,
+        topicDescription: selectedTopic.topicDescription,
+      });
+    }
+  }, [selectedTopic, reset]);
 
   const onSubmit = async (values) => {
     confirmAction(values);
@@ -73,7 +84,7 @@ const AddTopicModalComponent = ({
 
               <Flex justify="center">
                 <Button mt={4} colorScheme="teal" type="submit">
-                  Add Topic
+                  {selectedTopic ? 'Update Topic' : 'Add Topic'}
                 </Button>
               </Flex>
             </form>
@@ -89,6 +100,7 @@ AddTopicModalComponent.propTypes = {
   closeModal: PropTypes.func,
   confirmAction: PropTypes.func,
   modalTitle: PropTypes.string,
+  selectedTopic: PropTypes.object
 };
 
 export default AddTopicModalComponent;
