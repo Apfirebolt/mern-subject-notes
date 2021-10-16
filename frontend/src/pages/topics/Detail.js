@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MdDelete, MdUpdate, MdViewAgenda } from "react-icons/md";
+import { MdDelete, MdUpdate } from "react-icons/md";
 import {
   getTopicAction,
   addNoteAction,
@@ -119,7 +119,7 @@ const TopicDetailPage = ({ match }) => {
     setIsDeleteNoteModalOpened(true);
     const selectedNote = topic.notes.find((item) => item._id === noteId)
     setSelectedNote(selectedNote)
-    setDeleteMessage(`Are you sure you want to delete note titled ${selectedNote.heading} ?`)
+    setDeleteMessage(`Are you sure you want to delete note titled '${selectedNote.heading}' ?`)
   }
 
   const updateNoteHelper = (noteId) => {
@@ -128,21 +128,23 @@ const TopicDetailPage = ({ match }) => {
     setSelectedNote(selectedNote)
   }
 
-  const deleteTopicConfirm = () => {
+  const deleteNoteConfirm = () => {
     const payload = {
       subjectId: match.params.id,
-      topicId: selectedNote._id
+      topicId: match.params.topicId,
+      noteId: selectedNote._id
     }
     dispatch(deleteNoteAction(payload))
     setIsDeleteNoteModalOpened(false);
   }
 
-  const updateTopicConfirm = (values) => {
+  const updateNoteConfirm = (values) => {
     const payload = {
       subjectId: match.params.id,
-      topicId: selectedNote._id,
-      topicName: values.topicName,
-      topicDescription: values.topicDescription
+      topicId: match.params.topicId,
+      noteId: selectedNote._id,
+      heading: values.heading,
+      content: values.content
     }
     dispatch(updateNoteAction(payload))
     setIsUpdateNoteModalOpened(false)
@@ -228,14 +230,14 @@ const TopicDetailPage = ({ match }) => {
           <UpdateNoteModal
             isModalOpened={isUpdateNoteModalOpened}
             closeModal={closeUpdateTopicModal}
-            confirmAction={updateTopicConfirm}
+            confirmAction={updateNoteConfirm}
             modalTitle="Update Note"
             selectedNote={selectedNote}
           />
           <ConfirmModal
             isModalOpened={isDeleteNoteModalOpened}
             closeModal={closeDeleteTopicModal}
-            confirmAction={deleteTopicConfirm}
+            confirmAction={deleteNoteConfirm}
             confirmMessage={deleteMessage}
             modalTitle="Delete Note"
           />

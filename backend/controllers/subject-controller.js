@@ -209,13 +209,11 @@ const addNoteToTopic = asyncHandler(async (req, res) => {
 // @route   PUT /api/subjects/:id/topics/:topicId/notes/:noteId
 // @access  Private
 const updateNoteToTopic = asyncHandler(async (req, res) => {
-  const subject = await Subject.findOne({ 
-    _id: req.params.id, createdBy: req.user._id, "topics._id": req.params.topicId, 
-  })
+  const subject = await Subject.findOne({ _id: req.params.id, createdBy: req.user._id})
 
   if (subject) {
-    const relatedTopic = subject.topics.find((item) => toString(item._id) === toString(req.params.topicId))
-    const relatedNote = relatedTopic.notes.find((item) => toString(item._id) === toString(req.params.noteId))
+    const relatedTopic = subject.topics.find((item) => item._id.toHexString() === req.params.topicId)
+    const relatedNote = relatedTopic.notes.find((item) => item._id.toHexString() === req.params.noteId)
     
     relatedNote.content = req.body.content
     relatedNote.heading = req.body.heading
@@ -240,8 +238,8 @@ const deleteNoteFromTopic = asyncHandler(async (req, res) => {
   })
 
   if (subject) {
-    const relatedTopic = subject.topics.find((item) => toString(item._id) === toString(req.params.topicId))
-    const relatedNote = relatedTopic.notes.find((item) => toString(item._id) === toString(req.params.noteId))
+    const relatedTopic = subject.topics.find((item) => item._id.toHexString() === req.params.topicId)
+    const relatedNote = relatedTopic.notes.find((item) => item._id.toHexString() === req.params.noteId)
     
     const relatedNoteIndex = relatedTopic.notes.indexOf(relatedNote)
     relatedTopic.notes.splice(relatedNoteIndex, 1)
