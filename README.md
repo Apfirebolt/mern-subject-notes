@@ -1,9 +1,10 @@
-# MERN Subject Notes - Web application which simulates a Notebook
+# MERN Subject Notes - Web application which simulates a Notebook ⚡️
 
 ## Project Briefing
 
 This is a notes tracking web application I built to keep tracks of note-worthy points categorized by subjects. It's created in one of the most popular full stack technologies combination known as MERN (MongoDB, Express, React, Node). 
 
+Made with ❤️ by **[@apfirebolt](https://github.com/Apfirebolt/)**
 ## Features
 
 - Contains token based user auth system. 
@@ -19,10 +20,6 @@ This is a notes tracking web application I built to keep tracks of note-worthy p
 * [MongoDB](https://www.mongodb.com/)
 * [Redux](https://redux.js.org/)
 * [Chakra UI Kit](https://chakra-ui.com/)
-
-## Authors
-
-* **Amit Prafulla (APFirebolt)** - (http://apgiiit.com/)
 
 ## Project setup
 
@@ -41,6 +38,13 @@ For production, build the frontend of the app and then run the backend app only.
 npm run build
 npm start
 ```
+## Database Architecture
+
+- MongoDB is used as database which works pretty smoothly with Javascript and other Javascript frameworks. 
+- Mongoose ORM is used to define document schemas and perform 
+complex queries.
+- It has 2 models namely 'User' and 'Subjects'.
+- Nested or Embedded documents is used for Topics within a subject and Notes within a Topic.
 
 ## Project Screenshots
 
