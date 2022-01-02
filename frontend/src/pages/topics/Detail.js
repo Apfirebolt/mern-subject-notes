@@ -26,6 +26,7 @@ import {
   Flex,
   Button,
   Grid,
+  Text,
 } from "@chakra-ui/react";
 
 const TopicDetailPage = ({ match }) => {
@@ -34,7 +35,7 @@ const TopicDetailPage = ({ match }) => {
   const [isAddNoteModalOpened, setIsAddNoteModalOpened] = useState(false);
   const [isDeleteNoteModalOpened, setIsDeleteNoteModalOpened] = useState(false);
   const [isUpdateNoteModalOpened, setIsUpdateNoteModalOpened] = useState(false);
-  const [deleteMessage, setDeleteMessage] = useState('');
+  const [deleteMessage, setDeleteMessage] = useState("");
   const [selectedNote, setSelectedNote] = useState({});
 
   const getTopic = useSelector((state) => state.getTopic);
@@ -97,7 +98,15 @@ const TopicDetailPage = ({ match }) => {
       dispatch({ type: DETAIL_SUBJECT_RESET });
     }
     dispatch(getTopicAction(match.params.id, match.params.topicId));
-  }, [dispatch, match, error, noteError, noteUpdateError, noteDeleteError, toast]);
+  }, [
+    dispatch,
+    match,
+    error,
+    noteError,
+    noteUpdateError,
+    noteDeleteError,
+    toast,
+  ]);
 
   const openAddNoteModal = () => {
     setIsAddNoteModalOpened(true);
@@ -117,26 +126,28 @@ const TopicDetailPage = ({ match }) => {
 
   const deleteNoteHelper = (noteId) => {
     setIsDeleteNoteModalOpened(true);
-    const selectedNote = topic.notes.find((item) => item._id === noteId)
-    setSelectedNote(selectedNote)
-    setDeleteMessage(`Are you sure you want to delete note titled '${selectedNote.heading}' ?`)
-  }
+    const selectedNote = topic.notes.find((item) => item._id === noteId);
+    setSelectedNote(selectedNote);
+    setDeleteMessage(
+      `Are you sure you want to delete note titled '${selectedNote.heading}' ?`
+    );
+  };
 
   const updateNoteHelper = (noteId) => {
     setIsUpdateNoteModalOpened(true);
-    const selectedNote = topic.notes.find((item) => item._id === noteId)
-    setSelectedNote(selectedNote)
-  }
+    const selectedNote = topic.notes.find((item) => item._id === noteId);
+    setSelectedNote(selectedNote);
+  };
 
   const deleteNoteConfirm = () => {
     const payload = {
       subjectId: match.params.id,
       topicId: match.params.topicId,
-      noteId: selectedNote._id
-    }
-    dispatch(deleteNoteAction(payload))
+      noteId: selectedNote._id,
+    };
+    dispatch(deleteNoteAction(payload));
     setIsDeleteNoteModalOpened(false);
-  }
+  };
 
   const updateNoteConfirm = (values) => {
     const payload = {
@@ -144,11 +155,11 @@ const TopicDetailPage = ({ match }) => {
       topicId: match.params.topicId,
       noteId: selectedNote._id,
       heading: values.heading,
-      content: values.content
-    }
-    dispatch(updateNoteAction(payload))
-    setIsUpdateNoteModalOpened(false)
-  }
+      content: values.content,
+    };
+    dispatch(updateNoteAction(payload));
+    setIsUpdateNoteModalOpened(false);
+  };
 
   const addNoteConfirm = (data) => {
     const payload = {
@@ -181,6 +192,11 @@ const TopicDetailPage = ({ match }) => {
               Add Note
             </Button>
           </Flex>
+          {topic.notes && topic.notes.length === 0 && (
+            <Text my={2} color="gray.500" align="center" isTruncated>
+              No notes found.
+            </Text>
+          )}
           <Grid templateColumns="repeat(1, 1fr)" gap={6} my={3}>
             {topic &&
               topic.notes &&
@@ -189,7 +205,7 @@ const TopicDetailPage = ({ match }) => {
                   key={note._id}
                   w="100%"
                   bg="green.100"
-                  boxShadow="md" 
+                  boxShadow="md"
                   rounded="md"
                   color="gray.700"
                   px={2}
@@ -204,19 +220,21 @@ const TopicDetailPage = ({ match }) => {
                     {note.heading} - {note.content}
                   </Center>
                   <Flex justify="center" mt={3}>
-                    <Button 
-                      m={1} 
-                      bg="blue.400" 
+                    <Button
+                      m={1}
+                      bg="blue.400"
                       rightIcon={<MdUpdate />}
                       onClick={() => updateNoteHelper(note._id)}
                     >
                       Update
                     </Button>
-                    <Button 
-                      m={1} 
+                    <Button
+                      m={1}
                       rightIcon={<MdDelete />}
                       onClick={() => deleteNoteHelper(note._id)}
-                    >Delete</Button>
+                    >
+                      Delete
+                    </Button>
                   </Flex>
                 </Box>
               ))}

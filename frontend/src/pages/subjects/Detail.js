@@ -26,6 +26,7 @@ import {
   Flex,
   Button,
   Grid,
+  Text,
 } from "@chakra-ui/react";
 
 const SubjectDetailPage = ({ history, match }) => {
@@ -182,6 +183,11 @@ const SubjectDetailPage = ({ history, match }) => {
               Add Topic
             </Button>
           </Flex>
+          {subject.topics && subject.topics.length === 0 && (
+            <Text my={2} color="gray.500" align="center" isTruncated>
+              No topics found.
+            </Text>
+          )}
           <Grid templateColumns="repeat(3, 1fr)" gap={6} my={3}>
             {subject &&
               subject.topics &&

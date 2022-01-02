@@ -2,7 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DayJS from "react-dayjs";
 import { MdDelete, MdUpdate, MdPanoramaFishEye } from "react-icons/md";
-import { listSubjectsAction, deleteSubjectsAction } from "../../actions/subjectActions.js";
+import {
+  listSubjectsAction,
+  deleteSubjectsAction,
+} from "../../actions/subjectActions.js";
 import { DELETE_SUBJECT_RESET } from "../../constants/subjectConstants";
 import Loader from "../../components/common/Loader";
 import ConfirmModal from "../../components/common/ConfirmModal";
@@ -13,6 +16,7 @@ import {
   Center,
   useToast,
   Table,
+  Text,
   Thead,
   Tbody,
   Tr,
@@ -26,7 +30,7 @@ const SubjectListPage = ({ history }) => {
   const toast = useToast();
   const dispatch = useDispatch();
   const [isDeleteModalOpened, setisDeleteModalOpened] = useState(false);
-  const [deleteMessage, setDeleteMessage] = useState(''); 
+  const [deleteMessage, setDeleteMessage] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const listSubject = useSelector((state) => state.listSubject);
   const { error, loading, subjects } = listSubject;
@@ -36,7 +40,7 @@ const SubjectListPage = ({ history }) => {
 
   useEffect(() => {
     dispatch(listSubjectsAction());
-  }, [dispatch])
+  }, [dispatch]);
 
   useEffect(() => {
     if (deleteSuccess) {
@@ -46,7 +50,7 @@ const SubjectListPage = ({ history }) => {
         isClosable: true,
       });
       dispatch(listSubjectsAction());
-      dispatch({ type: DELETE_SUBJECT_RESET })
+      dispatch({ type: DELETE_SUBJECT_RESET });
     }
     if (error || deleteError) {
       toast({
@@ -59,31 +63,35 @@ const SubjectListPage = ({ history }) => {
 
   const openDeleteModal = () => {
     setisDeleteModalOpened(true);
-  }
+  };
 
   const closeDeleteModal = () => {
     setisDeleteModalOpened(false);
-  }
+  };
 
   const deleteSubjectHelper = (subjectId) => {
     openDeleteModal();
     setSelectedId(subjectId);
-    const toDeleteSubject = subjects.find((item) => toString(item._id) === toString(subjectId))
-    setDeleteMessage(`Are you sure you want to delete the subject named ${toDeleteSubject.name} ?`)
-  }
+    const toDeleteSubject = subjects.find(
+      (item) => toString(item._id) === toString(subjectId)
+    );
+    setDeleteMessage(
+      `Are you sure you want to delete the subject named ${toDeleteSubject.name} ?`
+    );
+  };
 
   const confirmDeleteSubject = () => {
     dispatch(deleteSubjectsAction(selectedId));
     closeDeleteModal();
-  }
+  };
 
   const goToDetailPage = (subjectId) => {
-    history.push(`/subjects/${subjectId}/detail`)
-  }
+    history.push(`/subjects/${subjectId}/detail`);
+  };
 
   const goToUpdatePage = (subjectId) => {
-    history.push(`/subjects/${subjectId}/update`)
-  }
+    history.push(`/subjects/${subjectId}/update`);
+  };
 
   return (
     <Box p={5} my={3} centerContent>
@@ -101,6 +109,10 @@ const SubjectListPage = ({ history }) => {
       </Center>
       {loading ? (
         <Loader />
+      ) : subjects && subjects.length === 0 ? (
+        <Text color="gray.500" align="center" isTruncated>
+          No subjects found, please add one from the top.
+        </Text>
       ) : (
         <Table variant="simple">
           <Thead>
@@ -112,42 +124,43 @@ const SubjectListPage = ({ history }) => {
             </Tr>
           </Thead>
           <Tbody>
-            {subjects && subjects.map((subject) => (
-              <Tr key={subject._id}>
-                <Td>{subject.name}</Td>
-                <Td>{subject.topics.length}</Td>
-                <Td>
-                  <DayJS format="MM-DD-YYYY">{subject.createdAt}</DayJS>
-                </Td>
-                <Td>
-                  <Stack direction="row" spacing={4}>
-                    <Button
-                      rightIcon={<MdUpdate />}
-                      colorScheme="blue"
-                      color="white"
-                      onClick={() => goToUpdatePage(subject._id)}
-                    >
-                      Update
-                    </Button>
-                    <Button
-                      rightIcon={<MdDelete />}
-                      colorScheme="red"
-                      onClick={() => deleteSubjectHelper(subject._id)}
-                    >
-                      Delete
-                    </Button>
-                    <Button
-                      rightIcon={<MdPanoramaFishEye />}
-                      colorScheme="blue"
-                      variant="outline"
-                      onClick={() => goToDetailPage(subject._id)}
-                    >
-                      Details
-                    </Button>
-                  </Stack>
-                </Td>
-              </Tr>
-            ))}
+            {subjects &&
+              subjects.map((subject) => (
+                <Tr key={subject._id}>
+                  <Td>{subject.name}</Td>
+                  <Td>{subject.topics.length}</Td>
+                  <Td>
+                    <DayJS format="MM-DD-YYYY">{subject.createdAt}</DayJS>
+                  </Td>
+                  <Td>
+                    <Stack direction="row" spacing={4}>
+                      <Button
+                        rightIcon={<MdUpdate />}
+                        colorScheme="blue"
+                        color="white"
+                        onClick={() => goToUpdatePage(subject._id)}
+                      >
+                        Update
+                      </Button>
+                      <Button
+                        rightIcon={<MdDelete />}
+                        colorScheme="red"
+                        onClick={() => deleteSubjectHelper(subject._id)}
+                      >
+                        Delete
+                      </Button>
+                      <Button
+                        rightIcon={<MdPanoramaFishEye />}
+                        colorScheme="blue"
+                        variant="outline"
+                        onClick={() => goToDetailPage(subject._id)}
+                      >
+                        Details
+                      </Button>
+                    </Stack>
+                  </Td>
+                </Tr>
+              ))}
           </Tbody>
         </Table>
       )}
