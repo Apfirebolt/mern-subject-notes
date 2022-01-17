@@ -19,6 +19,10 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
 }
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('client/build'));
+}
+
 app.use(express.json())
 app.use(cors())
 
