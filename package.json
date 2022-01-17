@@ -7,6 +7,8 @@
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
+    "install-client": "cd frontend && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build",
     "client": "npm start --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
