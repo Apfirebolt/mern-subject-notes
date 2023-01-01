@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../actions/authActions';
+import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import { gapi } from 'gapi-script';
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../../actions/authActions";
 import { USER_LOGOUT } from "../../constants/authConstants";
 
 import {
@@ -27,30 +29,53 @@ const LoginPage = ({ history }) => {
   const toast = useToast();
   const dispatch = useDispatch();
 
-  const userLogin = useSelector((state) => state.userLogin)
-  const { loading, error, success } = userLogin
+  const userLogin = useSelector((state) => state.userLogin);
+  const { loading, error, success } = userLogin;
 
   useEffect(() => {
     if (success) {
       toast({
-        title: 'Successfully logged in',
-        status: 'success',
+        title: "Successfully logged in",
+        status: "success",
         isClosable: true,
-      })
-      history.push('/')
-    } 
+      });
+      history.push("/");
+    }
     if (error) {
       toast({
         title: error,
-        status: 'error',
+        status: "error",
         isClosable: true,
-      })
-      dispatch({ type: USER_LOGOUT })
+      });
+      dispatch({ type: USER_LOGOUT });
     }
-  }, [dispatch, history, success, error, toast])
+  }, [dispatch, history, success, error, toast]);
+
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: "737754786921-842ko1fdrmk7f5nmddnsp541atibe6hd.apps.googleusercontent.com",
+        scope: 'email',
+      });
+    }
+
+    gapi.load('client:auth2', start);
+  }, []);
 
   const onSubmit = async (values) => {
-    dispatch(login({...values}))
+    dispatch(login({ ...values }));
+  };
+
+  const onSuccessGoogle = (response) => {
+    console.log(response);
+  }
+
+  const onFailureGoogle = (response) => {
+    console.log(response);
+  }
+
+  const onSuccessGoogleLogout = (response) => {
+    console.log('Logged out from Google')
   }
 
   return (
@@ -94,14 +119,21 @@ const LoginPage = ({ history }) => {
         </FormControl>
 
         <Flex justify="center">
-          <Button
-            mt={4}
-            colorScheme="teal"
-            isLoading={loading}
-            type="submit"
-          >
+          <Button mt={4} colorScheme="teal" isLoading={loading} type="submit">
             Sign In
           </Button>
+          <GoogleLogin
+            clientId=""
+            buttonText="Login with Google"
+            onSuccess={onSuccessGoogle}
+            onFailure={onFailureGoogle}
+            cookiePolicy={"single_host_origin"}
+          />
+           <GoogleLogout
+            clientId=""
+            buttonText="Logout"
+            onSuccess={onSuccessGoogleLogout}
+          />
         </Flex>
       </form>
     </Container>
