@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { GoogleLogin, GoogleLogout } from 'react-google-login';
+import { GoogleLogin } from 'react-google-login';
 import { gapi } from 'gapi-script';
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../actions/authActions";
@@ -54,7 +54,7 @@ const LoginPage = ({ history }) => {
   useEffect(() => {
     function start() {
       gapi.client.init({
-        clientId: "737754786921-842ko1fdrmk7f5nmddnsp541atibe6hd.apps.googleusercontent.com",
+        clientId: "",
         scope: 'email',
       });
     }
@@ -72,10 +72,6 @@ const LoginPage = ({ history }) => {
 
   const onFailureGoogle = (response) => {
     console.log(response);
-  }
-
-  const onSuccessGoogleLogout = (response) => {
-    console.log('Logged out from Google')
   }
 
   return (
@@ -128,11 +124,6 @@ const LoginPage = ({ history }) => {
             onSuccess={onSuccessGoogle}
             onFailure={onFailureGoogle}
             cookiePolicy={"single_host_origin"}
-          />
-           <GoogleLogout
-            clientId=""
-            buttonText="Logout"
-            onSuccess={onSuccessGoogleLogout}
           />
         </Flex>
       </form>
