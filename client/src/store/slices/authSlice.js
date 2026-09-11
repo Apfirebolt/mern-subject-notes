@@ -27,7 +27,7 @@ export const createAuthSlice = (set, get) => {
         set({ authLoading: true, authError: null });
 
         const response = await httpClient.post(
-          "login",
+          "auth/login",
           { email, password },
           { timeout: 10000 },
         );
@@ -71,7 +71,7 @@ export const createAuthSlice = (set, get) => {
     registerUser: async (username, email, password) => {
       try {
         set({ authLoading: true, authError: null });
-        await httpClient.post("register", { username, email, password });
+        await httpClient.post("auth", { username, email, password });
         toast.success("Registration successful! Please log in.", toastOptions);
       } catch (error) {
         console.error("Registration error:", error);

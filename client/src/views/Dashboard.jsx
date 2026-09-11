@@ -15,12 +15,12 @@ import {
   PencilSquareIcon,
   ArrowRightIcon,
   SparklesIcon,
-} from "@heroicons/vue/24/outline"; // If using heroicons/react, swap to: from "@heroicons/react/24/outline"
-import { useSubjectStore } from "../store/useSubjectStore";
+} from "@heroicons/react/24/outline";
+import { createSubjectSlice } from "../store/slices/subjectSlice";
 import SubjectForm from "../components/SubjectForm";
 
 const Dashboard = () => {
-  const { subjects, loading, fetchSubjects, deleteSubject } = useSubjectStore();
+  const { subjects, loading, fetchSubjects, deleteSubject } = createSubjectSlice();
   const [isSubjectModalOpen, setIsSubjectModalOpen] = useState(false);
   const [editingSubject, setEditingSubject] = useState(null);
 

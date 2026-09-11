@@ -6,5 +6,5 @@ import { createSubjectSlice } from './slices/subjectSlice';
 export const useAppStore = create((set, get) => ({
   ...createAuthSlice(set, get),
   ...createUserSlice(set, get),
-  ...createSubjectSlice(set, get),
+  ...createSubjectSlice(set, get)
 }));

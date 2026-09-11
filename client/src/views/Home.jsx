@@ -3,7 +3,6 @@ import {
   BookOpenIcon,
   SparklesIcon,
   FolderTreeIcon,
-  DocumentTextIcon,
   ArrowRightIcon,
   CheckCircle2Icon
 } from 'lucide-react'
@@ -25,7 +24,7 @@ export default function Home() {
     {
       title: "Focused Study Notes",
       desc: "Capture crisp headings, lecture formulas, and code snippets in clean markdown without visual clutter.",
-      icon: DocumentTextIcon,
+      icon: SparklesIcon,
       accent: "bg-violet-500/10 text-violet-600 dark:bg-violet-400/10 dark:text-violet-400"
     },
     {

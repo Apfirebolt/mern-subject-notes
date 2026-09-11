@@ -1,11 +1,11 @@
 // src/components/SubjectForm.jsx
 import { useState } from 'react';
 import { Field, Label, Input } from '@headlessui/react';
-import { useSubjectStore } from '../store/useSubjectStore';
+import { createSubjectSlice } from '../store/slices/subjectSlice';
 
 export default function SubjectForm({ initialData = null, onCancel, onSuccess }) {
   const isEditMode = Boolean(initialData);
-  const { createSubject, updateSubject, loading, error } = useSubjectStore();
+  const { createSubject, updateSubject, loading, error } = createSubjectSlice();
 
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
