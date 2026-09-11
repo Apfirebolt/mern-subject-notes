@@ -1,46 +1,82 @@
-import express from 'express'
-import dotenv from 'dotenv'
-import morgan from 'morgan'
-import cors from 'cors';
-import connectDB from './config/db.js'
-import { notFound, errorHandler } from './middleware/error-handler.js'
+import path from "path";
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import swaggerUi from "swagger-ui-express";
+import swaggerJsdoc from "swagger-jsdoc";
 
-// import routes
-import authRoutes from './routes/auth-routes.js'
-import subjectRoutes from './routes/subject-routes.js'
+import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
-dotenv.config()
+import authRoutes from "./routes/authRoutes.js";
+import subjectRoutes from "./routes/subjectRoutes.js";
 
-connectDB()
+dotenv.config();
+import { connectDB } from "./config/db.js";
 
-const app = express()
+const port = process.env.PORT || 5000;
 
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'))
-}
+connectDB();
+
+const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+const __dirname = path.resolve();
+
+// Swagger Documentation Configuration
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Subject Notes API",
+      version: "1.0.0",
+      description: "API documentation for the MERN Subject Notes application",
+    },
+    servers: [
+      {
+        url: `http://localhost:${port}`,
+        description: "Development server",
+      },
+    ],
+  },
+  apis: [
+    path.join(__dirname, "routes", "*.js"),
+    path.join(__dirname, "backend", "routes", "*.js"),
+  ],
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+// Swagger Documentation Route
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Option 1: Allow requests from port 3000 only
+const corsOptions = {
+  origin: ['http://localhost:3000', 'http://localhost:5000', 'http://localhost'],
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
+
+app.use("/api/auth", authRoutes);
+app.use("/api/subjects", subjectRoutes);
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('frontend/build'));
+  app.use(express.static(path.join(__dirname, '/client/dist')));
+
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'client', 'dist', 'index.html'))
+  );
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running....');
+  });
 }
 
-app.use(express.json())
-app.use(cors())
+app.use(notFound);
+app.use(errorHandler);
 
-app.use('/api/auth', authRoutes)
-app.use('/api/subjects', subjectRoutes)
-
-app.get('/', (req, res) => {
-    res.json({ message: 'Success' })
-})
-
-app.use(notFound)
-app.use(errorHandler)
-
-const PORT = process.env.PORT || 5000
-
-app.listen(
-  PORT,
-  console.log(
-    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`
-  )
-)
+app.listen(port, () =>
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${port}`)
+);
