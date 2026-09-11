@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const baseUrl = 'http://localhost:8000/api';
+const baseUrl = 'http://localhost:5000/api/';
 
 const httpClient = axios.create({
   baseURL: baseUrl,

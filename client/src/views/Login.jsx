@@ -2,13 +2,12 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { Field, Label, Input } from '@headlessui/react'
-import { useAppStore } from '../store' // 1. Import your central unified store hook
+import { useAppStore } from '../store'
 
 export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   
-  // 2. Extract state properties and auth actions from Zustand
   const loginUser = useAppStore((state) => state.loginUser)
   const authLoading = useAppStore((state) => state.authLoading)
   const authError = useAppStore((state) => state.authError)
@@ -19,12 +18,12 @@ export default function Login() {
     e.preventDefault()
 
     try {
-      // 3. Dispatch the action payload to your Django backend
       await loginUser(email, password)
-      
       navigate('/dashboard')
     } catch (err) {
-      console.error('Login process caught failure:', err.message)
+      // Error is already handled and stored in Zustand state (authError), 
+      // but catching here prevents unwanted navigation on failure.
+      console.error('Login aborted due to failure')
     }
   }
 
@@ -43,14 +42,12 @@ export default function Login() {
         <div className="bg-white py-8 px-4 shadow sm:rounded-xl sm:px-10 border border-gray-100">
           <form className="space-y-6" onSubmit={handleSubmit}>
             
-            {/* 4. Display the global error string directly from your store */}
             {authError && (
               <div className="rounded-md bg-red-50 p-4 border border-red-200">
                 <p className="text-sm font-medium text-red-800">{authError}</p>
               </div>
             )}
 
-            {/* Email Field using Headless UI */}
             <Field className="space-y-1">
               <Label className="block text-sm font-medium text-gray-700">Email address</Label>
               <Input
@@ -58,12 +55,11 @@ export default function Login() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm outline-none transition"
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder-gray-400 focus:border-brand-primary focus:ring-brand-primary sm:text-sm outline-none transition"
                 placeholder="you@example.com"
               />
             </Field>
 
-            {/* Password Field using Headless UI */}
             <Field className="space-y-1">
               <Label className="block text-sm font-medium text-gray-700">Password</Label>
               <Input
@@ -71,7 +67,7 @@ export default function Login() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm outline-none transition"
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder-gray-400 focus:border-brand-primary focus:ring-brand-primary sm:text-sm outline-none transition"
                 placeholder="••••••••"
               />
             </Field>
@@ -81,7 +77,7 @@ export default function Login() {
                 <input
                   id="remember-me"
                   type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  className="h-4 w-4 rounded border-gray-300 text-brand-primary focus:ring-brand-primary"
                 />
                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
                   Remember me
@@ -89,23 +85,23 @@ export default function Login() {
               </div>
 
               <div className="text-sm">
-                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
+                <a href="#" className="font-medium text-brand-primary hover:text-brand-secondary">
                   Forgot your password?
                 </a>
               </div>
             </div>
 
             <div className="text-sm">
-                <a href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Don't have an account? Register
-                </a>
-              </div>
+              <a href="/register" className="font-medium text-brand-primary hover:text-brand-secondary">
+                Don't have an account? Register
+              </a>
+            </div>
+
             <div>
-              {/* 5. Disable the form submission button based on the global loading indicator */}
               <button
                 type="submit"
                 disabled={authLoading}
-                className="flex w-full justify-center rounded-lg bg-indigo-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 transition"
+                className="flex w-full justify-center rounded-lg bg-brand-primary px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary disabled:opacity-50 transition"
               >
                 {authLoading ? 'Signing in...' : 'Sign in'}
               </button>

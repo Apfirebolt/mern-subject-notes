@@ -3,13 +3,6 @@ import Home from "./views/Home";
 import Login from "./views/Login";
 import Register from "./views/Register";
 import Dashboard from "./views/Dashboard";
-import Services from "./views/Services";
-import Subscriptions from "./views/Subscriptions";
-import SubscriptionDetail from "./views/SubscriptionDetail";
-import Budget from "./views/Budget";
-import Settings from "./views/Settings";
-import People from "./views/People";
-import UserDetail from "./views/UserDetail";
 import { ToastContainer } from "react-toastify";
 import { useAppStore } from "./store";
 
@@ -90,16 +83,6 @@ export default function App() {
           <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm min-h-[400px]">
             <Routes>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/subscriptions" element={<Subscriptions />} />
-              <Route
-                path="/subscriptions/:id"
-                element={<SubscriptionDetail />}
-              />
-              <Route path="/budget" element={<Budget />} />
-              <Route path="/people" element={<People />} />
-              <Route path="/people/:id" element={<UserDetail />} />
-              <Route path="/settings" element={<Settings />} />
             </Routes>
           </div>
         )}

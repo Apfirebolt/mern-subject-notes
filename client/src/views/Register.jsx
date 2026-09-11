@@ -1,6 +1,7 @@
+// src/views/Register.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { useAppStore } from "../store"; // 1. Import your central unified store hook
+import { useAppStore } from "../store";
 import { Field, Label, Input } from "@headlessui/react";
 
 export default function Register() {
@@ -8,60 +9,59 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [localError, setLocalError] = useState("");
 
   const navigate = useNavigate();
   const registerUser = useAppStore((state) => state.registerUser);
+  const authLoading = useAppStore((state) => state.authLoading);
+  const authError = useAppStore((state) => state.authError);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setLocalError("");
 
     if (!name.trim() || !email.trim() || !password) {
-      setError("Please fill in all required fields.");
+      setLocalError("Please fill in all required fields.");
       return;
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+      setLocalError("Password must be at least 6 characters.");
       return;
     }
 
     if (password !== confirm) {
-      setError("Passwords do not match.");
+      setLocalError("Passwords do not match.");
       return;
     }
 
-    setLoading(true);
-
-    await registerUser(name, email, password)
-      .then(() => {
-        navigate("/dashboard");
-      })
-      .catch((err) => {
-        setError(err.message || "Registration failed. Please try again.");
-        setLoading(false);
-      });
+    try {
+      await registerUser(name, email, password);
+      navigate("/login");
+    } catch (err) {
+      // Error handling managed via Zustand state (authError)
+    }
   };
 
+  const displayError = localError || authError;
+
   return (
-    <div className="flex min-h-[80vh] flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50">
+    <div className="flex min-h-[80vh] flex-col justify-center py-12 sm:px-6 lg:px-8 bg-gray-50 font-sans">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
           Create your account
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Start managing subscriptions quickly
+          Organize subjects, structure topics, and write Markdown notes seamlessly
         </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-xl sm:px-10 border border-gray-100">
           <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
+            {displayError && (
               <div className="rounded-md bg-red-50 p-4 border border-red-200">
-                <p className="text-sm font-medium text-red-800">{error}</p>
+                <p className="text-sm font-medium text-red-800">{displayError}</p>
               </div>
             )}
 
@@ -74,7 +74,7 @@ export default function Register() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm outline-none transition"
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder-gray-400 focus:border-brand-primary focus:ring-brand-primary sm:text-sm outline-none transition"
                 placeholder="Your name"
               />
             </Field>
@@ -88,7 +88,7 @@ export default function Register() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm outline-none transition"
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder-gray-400 focus:border-brand-primary focus:ring-brand-primary sm:text-sm outline-none transition"
                 placeholder="you@example.com"
               />
             </Field>
@@ -102,7 +102,7 @@ export default function Register() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm outline-none transition"
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder-gray-400 focus:border-brand-primary focus:ring-brand-primary sm:text-sm outline-none transition"
                 placeholder="At least 6 characters"
               />
             </Field>
@@ -116,7 +116,7 @@ export default function Register() {
                 required
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
-                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm outline-none transition"
+                className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 shadow-sm placeholder-gray-400 focus:border-brand-primary focus:ring-brand-primary sm:text-sm outline-none transition"
                 placeholder="Re-enter password"
               />
             </Field>
@@ -124,19 +124,19 @@ export default function Register() {
             <div>
               <button
                 type="submit"
-                disabled={loading}
-                className="flex w-full justify-center rounded-lg bg-indigo-600 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-50 transition"
+                disabled={authLoading}
+                className="flex w-full justify-center rounded-lg bg-brand-primary px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-brand-secondary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary disabled:opacity-50 transition"
               >
-                {loading ? "Creating account..." : "Create account"}
+                {authLoading ? "Creating account..." : "Create account"}
               </button>
             </div>
 
             <div className="text-sm text-center">
-              <p>
+              <p className="text-gray-600">
                 Already have an account?{" "}
                 <a
                   href="/login"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
+                  className="font-medium text-brand-primary hover:text-brand-secondary"
                 >
                   Sign in
                 </a>
