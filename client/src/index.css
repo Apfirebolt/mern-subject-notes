@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-primary: #4f4677;
+  /* No more tailwind.config.js needed! Content scanning is automatic. */
+}
