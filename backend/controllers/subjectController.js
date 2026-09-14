@@ -1,6 +1,6 @@
 // controllers/subjectController.js
 import asyncHandler from "../middleware/asyncHandler.js";
-import Subject from "../models/subject.js";
+import Subject from "../models/Subject.js";
 
 // @desc    Create a new subject
 // @route   POST /api/subjects
