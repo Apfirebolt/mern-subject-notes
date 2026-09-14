@@ -73,9 +73,10 @@ export default function SubjectDetail() {
     }
   };
 
-  const handleDeleteTopic = async (topicId, topicName) => {
-    if (window.confirm(`Delete topic "${topicName}" and all its notes?`)) {
+  const handleDeleteTopic = async (topicId, topic) => {
+    if (window.confirm(`Delete topic "${topic.topicName}" and all its notes?`)) {
       try {
+        console.log('Deleting topic for subject ID:', subjectId, 'with topic ID:', topic._id);
         await deleteTopic(subjectId, topicId);
       } catch (err) {
         console.error("Failed to delete topic:", err);
@@ -218,7 +219,7 @@ export default function SubjectDetail() {
                       </button>
 
                       <button
-                        onClick={() => handleDeleteTopic(topicId, topic.topicName)}
+                        onClick={() => handleDeleteTopic(topicId, topic)}
                         className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition"
                         title="Delete Topic"
                       >

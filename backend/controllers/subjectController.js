@@ -110,6 +110,54 @@ const addTopicToSubject = asyncHandler(async (req, res) => {
   res.status(201).json(subject);
 });
 
+// @desc    Delete a topic from a subject
+// @route   DELETE /api/subjects/:id/topics/:topicId
+// @access  Private
+const deleteTopicFromSubject = asyncHandler(async (req, res) => {
+  const subject = await Subject.findById(req.params.id);
+
+  if (!subject) {
+    res.status(404);
+    throw new Error("Subject not found");
+  }
+
+  const topic = subject.topics.id(req.params.topicId);
+  if (!topic) {
+    res.status(404);
+    throw new Error("Topic not found");
+  }
+
+  await topic.deleteOne(); // <-- Fixed: use deleteOne() instead of remove()
+  await subject.save();
+
+  res.status(204).end();
+});
+
+// @desc    Update a topic from a subject
+// @route   PUT /api/subjects/:id/topics/:topicId
+// @access  Private
+const updateTopicFromSubject = asyncHandler(async (req, res) => {
+  const { topicName, topicDescription } = req.body;
+  const subject = await Subject.findById(req.params.id);
+
+  if (!subject) {
+    res.status(404);
+    throw new Error("Subject not found");
+  }
+
+  const topic = subject.topics.id(req.params.topicId);
+  if (!topic) {
+    res.status(404);
+    throw new Error("Topic not found");
+  }
+
+  topic.topicName = topicName || topic.topicName;
+  topic.topicDescription = topicDescription || topic.topicDescription;
+  await subject.save();
+
+  res.json(subject);
+});
+
 // @desc    Add a markdown note to a topic
 // @route   POST /api/subjects/:id/topics/:topicId/notes
 // @access  Private
@@ -147,4 +195,6 @@ export {
   deleteSubject,
   addTopicToSubject,
   addNoteToTopic,
+  deleteTopicFromSubject,
+  updateTopicFromSubject,
 };

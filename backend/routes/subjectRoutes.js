@@ -8,6 +8,8 @@ import {
   deleteSubject,
   addTopicToSubject,
   addNoteToTopic,
+  deleteTopicFromSubject,
+  updateTopicFromSubject
 } from '../controllers/subjectController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -140,6 +142,72 @@ router.route('/:id').get(protect, getSubjectById).put(protect, updateSubject).de
  *         description: Subject not found
  */
 router.route('/:id/topics').post(protect, addTopicToSubject);
+
+/**
+ * @swagger
+ * /api/subjects/{id}/topics/{topicId}:
+ *   delete:
+ *     summary: Delete a topic from a subject
+ *     tags: [Subjects]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: topicId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       204:
+ *         description: Topic deleted successfully
+ *       404:
+ *         description: Subject or Topic not found
+ */
+router.route('/:id/topics/:topicId').delete(protect, deleteTopicFromSubject).put(protect, updateTopicFromSubject);
+
+/**
+ * @swagger
+ * /api/subjects/{id}/topics/{topicId}:
+ *   put:
+ *     summary: Update a topic from a subject
+ *     tags: [Subjects]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: topicId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - topicName
+ *               - topicDescription
+ *             properties:
+ *               topicName:
+ *                 type: string
+ *                 example: Calculus
+ *               topicDescription:
+ *                 type: string
+ *                 example: Introduction to limits and derivatives
+ *     responses:
+ *       200:
+ *         description: Topic updated successfully
+ *       404:
+ *         description: Subject or Topic not found
+ */
+router.route('/:id/topics/:topicId').put(protect, updateTopicFromSubject);
 
 /**
  * @swagger
