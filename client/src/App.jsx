@@ -10,7 +10,7 @@ import { useAppStore } from "./store";
 
 export default function App() {
   const location = useLocation();
-  const navigate = useNavigate(); // 2. Initialize navigate engine
+  const navigate = useNavigate();
 
   const isPlainPage = ["/", "/login", "/register"].includes(location.pathname);
 
@@ -78,7 +78,7 @@ export default function App() {
           <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm min-h-[400px]">
             <Routes>
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/subjects/:id" element={<SubjectDetail />} />
+              <Route path="/subjects/:subjectId" element={<SubjectDetail />} />
             </Routes>
           </div>
         )}

@@ -85,6 +85,7 @@ export const createSubjectSlice = (set, get) => ({
 
   createTopic: async (subjectId, topicData) => {
     set({ loading: true, error: null });
+    console.log('Creating topic for subject ID:', subjectId, 'with data:', topicData)
     try {
       const { data } = await httpClient.post(`${API_BASE}/${subjectId}/topics`, topicData);
       set((state) => {

@@ -1,16 +1,16 @@
 // src/components/TopicForm.jsx
 import { useState } from 'react'
-import { Field, Label, Input, Textarea, Select } from '@headlessui/react'
+import { Field, Label, Input, Textarea } from '@headlessui/react'
 import { useAppStore } from '../store'
 
 export default function TopicForm({ subjectId, initialData = null, onCancel, onSuccess }) {
   const isEditMode = !!initialData
   const { createTopic, updateTopic, loading, error } = useAppStore()
 
+  console.log('Subject ID', subjectId)
   const [formData, setFormData] = useState({
-    title: initialData?.title || '',
-    description: initialData?.description || '',
-    priority: initialData?.priority || 'medium',
+    topicName: initialData?.title || '',
+    topicDescription: initialData?.description || '',
   })
 
   const handleChange = (e) => {
@@ -22,9 +22,15 @@ export default function TopicForm({ subjectId, initialData = null, onCancel, onS
     e.preventDefault()
     try {
       if (isEditMode) {
-        await updateTopic(subjectId, initialData._id || initialData.id, formData)
+        await updateTopic(subjectId, initialData._id || initialData.id, {
+          topicName: formData.topicName,
+          topicDescription: formData.topicDescription,
+        })
       } else {
-        await createTopic(subjectId, formData)
+        await createTopic(subjectId, {
+          topicName: formData.topicName,
+          topicDescription: formData.topicDescription,
+        })
       }
 
       if (onSuccess) onSuccess()
@@ -61,33 +67,13 @@ export default function TopicForm({ subjectId, initialData = null, onCancel, onS
           </Label>
           <Input
             type="text"
-            name="title"
+            name="topicName"
             required
-            value={formData.title}
+            value={formData.topicName}
             onChange={handleChange}
             placeholder="e.g. Process Scheduling & Deadlocks, Binary Search Trees"
             className="block w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-900 shadow-xs placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden transition"
           />
-        </Field>
-
-        {/* Priority Selector */}
-        <Field className="space-y-1">
-          <Label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Study Priority
-          </Label>
-          <div className="relative">
-            <Select
-              name="priority"
-              value={formData.priority}
-              onChange={handleChange}
-              className="block w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-900 shadow-xs focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden transition bg-white cursor-pointer"
-            >
-              <option value="low">Low Priority</option>
-              <option value="medium">Medium Priority</option>
-              <option value="high">High Priority</option>
-              <option value="critical">Critical / Exam Essential</option>
-            </Select>
-          </div>
         </Field>
 
         {/* Topic Description */}
@@ -96,9 +82,9 @@ export default function TopicForm({ subjectId, initialData = null, onCancel, onS
             Summary & Scope
           </Label>
           <Textarea
-            name="description"
+            name="topicDescription"
             rows="3"
-            value={formData.description}
+            value={formData.topicDescription}
             onChange={handleChange}
             placeholder="Key concepts, syllabus sub-bullets, or exam weightage..."
             className="block w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm text-gray-900 shadow-xs placeholder-gray-400 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-hidden transition resize-none"

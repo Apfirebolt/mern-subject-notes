@@ -16,7 +16,7 @@ import {
   ChevronUpIcon,
   ListBulletIcon,
 } from "@heroicons/react/24/outline";
-import { createSubjectSlice } from "../store/slices/subjectSlice";
+import { useAppStore } from "../store";
 import TopicForm from "../components/TopicForm";
 
 export default function SubjectDetail() {
@@ -31,7 +31,7 @@ export default function SubjectDetail() {
     deleteSubject,
     deleteTopic,
     deleteNote,
-  } = createSubjectSlice();
+  } = useAppStore();
 
   const [isTopicModalOpen, setIsTopicModalOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState(null);
