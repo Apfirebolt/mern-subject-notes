@@ -13,7 +13,7 @@
     "install-client": "cd client && npm install",
     "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "vercel-build": "npm run install-client && npm run build --prefix client"
+    "vercel-build": "cd client && npm install && npm run build"
   },
   "keywords": [],
   "author": "Apfirebolt",
