@@ -39,11 +39,11 @@ export const createAuthSlice = (set, get) => {
         toast.success("Login successful", toastOptions);
 
         Cookies.set("user", JSON.stringify(response.data), { expires: 7 });
-        Cookies.set("token", response.data.access, { expires: 7 });
+        Cookies.set("token", response.data.token, { expires: 7 });
 
         set({
           user: response.data,
-          token: response.data.access,
+          token: response.data.token,
           authLoading: false,
         });
       } catch (error) {
@@ -94,7 +94,7 @@ export const createAuthSlice = (set, get) => {
         }
 
         const response = await httpClient.get(
-          "http://localhost:8000/api/profile",
+          "profile",
           {
             headers: { Authorization: `Bearer ${token}` },
           },

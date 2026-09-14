@@ -1,6 +1,7 @@
 import { Routes, Route, Link, useLocation, useNavigate } from "react-router"; // 1. Added useNavigate
 import Home from "./views/Home";
 import Login from "./views/Login";
+import Footer from "./components/FooterComponent";
 import Register from "./views/Register";
 import Dashboard from "./views/Dashboard";
 import { ToastContainer } from "react-toastify";
@@ -99,6 +100,7 @@ export default function App() {
           theme="light"
         />
       </main>
+      <Footer />
     </div>
   );
 }

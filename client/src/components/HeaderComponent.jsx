@@ -1,114 +1,100 @@
 // src/components/Header.jsx
-import { useState } from 'react'
-import { Link, useLocation } from 'react-router'
-import { Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
+import { useState, useEffect } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router'
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import { useAppStore } from '../store'
+
+const navigation = [
+  { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Subjects', href: '/subjects' },
+]
 
 export default function Header() {
   const location = useLocation()
+  const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  // Dummy user data from your upcoming Auth Store state connection
-  const user = {
-    name: 'Alex Morgan',
-    email: 'alex@example.com',
-    avatarUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+  const user = useAppStore((state) => state.user)
+  const logoutUser = useAppStore((state) => state.logoutUser)
+
+  // Automatically close mobile menu on location change
+  useEffect(() => {
+    setMobileMenuOpen(false)
+  }, [location.pathname])
+
+  const isCurrent = (path) => location.pathname === path
+
+  const handleLogout = () => {
+    logoutUser()
+    navigate('/login')
   }
 
-  const navigation = [
-    { name: 'Dashboard', href: '/dashboard' },
-    { name: 'Budgets', href: '/budgets' },
-    { name: 'Services', href: '/services' },
-  ]
-
-  // Helper utility class for linking states
-  const linkClass = (path) => {
-    const base = "text-sm font-medium transition-colors duration-200 "
-    return location.pathname === path
-      ? base + "text-indigo-600 font-semibold"
-      : base + "text-gray-600 hover:text-gray-900"
-  }
+  const userInitial = (user?.username?.charAt(0) || user?.email?.charAt(0) || 'U').toUpperCase()
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-xs">
+    <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-xs font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
           
-          {/* Brand Identity / Logo */}
+          {/* Brand Identity */}
           <div className="flex items-center gap-8">
-            <Link to="/dashboard" className="flex items-center gap-2 group">
-              <span className="text-2xl">💸</span>
-              <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-                SubManager
+            <Link className="flex items-center gap-2 group" to="/dashboard">
+              <span className="text-2xl" aria-hidden="true">📚</span>
+              <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
+                NoteSpace
               </span>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
               {navigation.map((item) => (
-                <Link key={item.name} to={item.href} className={linkClass(item.href)}>
+                <Link ${ 'text-brand-primary 'text-gray-600 : ? className="{`text-sm" duration-200 font-medium font-semibold' hover:text-gray-900' isCurrent(item.href) key="{item.name}" to="{item.href}" transition-colors }`}>
                   {item.name}
                 </Link>
               ))}
             </nav>
           </div>
 
-          {/* User Profile Action Corner (Headless UI Menu Primitives) */}
+          {/* User Profile Menu */}
           <div className="flex items-center gap-4">
             <Menu as="div" className="relative">
-              <MenuButton className="flex rounded-full bg-white text-sm focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition">
+              <MenuButton className="flex items-center gap-2 rounded-full bg-white text-sm focus:outline-hidden focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition p-1">
                 <span className="sr-only">Open user menu</span>
-                <img
-                  className="h-8 w-8 rounded-full border border-gray-200 shadow-xs object-cover"
-                  src={user.avatarUrl}
-                  alt={user.name}
-                />
+                <div className="h-8 w-8 rounded-full bg-brand-primary text-white flex items-center font-semibold justify-center text-sm shadow-xs">
+                  {userInitial}
+                </div>
               </MenuButton>
 
-              <Transition
-                enter="transition ease-out duration-100"
-                enterFrom="transform opacity-0 scale-95"
-                enterTo="transform opacity-100 scale-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="transform opacity-100 scale-100"
-                leaveTo="transform opacity-0 scale-95"
-              >
-                <MenuItems className="absolute right-0 z-50 mt-2 w-48 origin-top-right rounded-xl bg-white p-1 py-1 shadow-lg ring-1 ring-black/5 focus:outline-hidden border border-gray-100">
-                  <div className="px-3 py-2 border-b border-gray-100 mb-1">
-                    <p className="text-xs font-semibold text-gray-900 truncate">{user.name}</p>
-                    <p className="text-xs text-gray-400 truncate">{user.email}</p>
-                  </div>
-                  
-                  <MenuItem>
-                    {({ focus }) => (
-                      <Link
-                        to="/settings"
-                        className={`${focus ? 'bg-gray-50 text-gray-900' : 'text-gray-700'} block px-3 py-2 text-sm rounded-lg transition-colors`}
-                      >
-                        Settings Preferences
-                      </Link>
-                    )}
-                  </MenuItem>
-                  
-                  <MenuItem>
-                    {({ focus }) => (
-                      <button
-                        onClick={() => console.log('Dispatching logout configuration...')}
-                        className={`${focus ? 'bg-red-50 text-red-600' : 'text-gray-700'} block w-full text-left px-3 py-2 text-sm rounded-lg transition-colors`}
-                      >
-                        Sign out
-                      </button>
-                    )}
-                  </MenuItem>
-                </MenuItems>
-              </Transition>
+              <MenuItems className="absolute right-0 z-50 mt-2 w-56 origin-top-right rounded-xl bg-white p-1 shadow-lg ring-1 ring-black/5 focus:outline-hidden border border-gray-100 transition duration-100 ease-out data-[closed]:scale-95 data-[closed]:opacity-0" transition>
+                <div className="px-3 py-2.5 border-b border-gray-100 mb-1">
+                  <p className="text-xs font-semibold text-gray-900 truncate">{user?.username || 'User'}</p>
+                  <p className="text-xs text-gray-400 truncate">{user?.email || 'user@example.com'}</p>
+                </div>
+                
+                <MenuItem>
+                  <Link className="block px-3 py-2 text-sm rounded-lg text-gray-700 data-[focus]:bg-gray-50 data-[focus]:text-gray-900 transition-colors" to="/settings">
+                    Settings & Preferences
+                  </Link>
+                </MenuItem>
+                
+                <MenuItem>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-3 py-2 text-sm rounded-lg font-medium text-gray-700 data-[focus]:bg-red-50 data-[focus]:text-red-600 transition-colors"
+                  >
+                    Sign out
+                  </button>
+                </MenuItem>
+              </MenuItems>
             </Menu>
 
-            {/* Mobile Menu Open Trigger Hamburger Button */}
+            {/* Mobile Hamburger Toggle */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              aria-expanded={mobileMenuOpen}
+              aria-label="Toggle navigation menu"
               className="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 focus:outline-hidden"
             >
-              <span className="sr-only">Open main menu</span>
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                 {mobileMenuOpen ? (
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -121,24 +107,15 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Drawer Panel Dropdown */}
+      {/* Mobile Dropdown Panel */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-gray-200 bg-white px-4 pt-2 pb-4 space-y-1">
+        <nav className="md:hidden border-b border-gray-200 bg-white px-4 pt-2 pb-4 space-y-1">
           {navigation.map((item) => (
-            <Link
-              key={item.name}
-              to={item.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className={`block px-3 py-2.5 rounded-xl text-base font-medium transition-colors ${
-                location.pathname === item.href 
-                  ? "bg-indigo-50 text-indigo-700" 
-                  : "text-gray-600 hover:bg-gray-50"
-              }`}
-            >
+            <Link ${ 'bg-purple-50 'text-gray-600 : ? className="{`block" font-medium font-semibold' hover:bg-gray-50' isCurrent(item.href) key="{item.name}" px-3 py-2.5 rounded-xl text-base text-brand-primary to="{item.href}" transition-colors }`}>
               {item.name}
             </Link>
           ))}
-        </div>
+        </nav>
       )}
     </header>
   )

@@ -16,11 +16,11 @@ import {
   ArrowRightIcon,
   SparklesIcon,
 } from "@heroicons/react/24/outline";
-import { createSubjectSlice } from "../store/slices/subjectSlice";
+import { useAppStore } from "../store";
 import SubjectForm from "../components/SubjectForm";
 
 const Dashboard = () => {
-  const { subjects, loading, fetchSubjects, deleteSubject } = createSubjectSlice();
+  const { subjects, loading, fetchSubjects, deleteSubject } = useAppStore();
   const [isSubjectModalOpen, setIsSubjectModalOpen] = useState(false);
   const [editingSubject, setEditingSubject] = useState(null);
 

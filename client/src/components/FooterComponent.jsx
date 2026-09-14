@@ -2,41 +2,40 @@
 import { Link } from 'react-router'
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear() // Dynamically evaluates to 2026
+  const currentYear = new Date().getFullYear()
 
   const sections = [
     {
-      title: 'Application',
+      title: 'Workspace',
       links: [
         { name: 'Dashboard', href: '/dashboard' },
-        { name: 'Budget Control', href: '/budgets' },
+        { name: 'Subjects', href: '/subjects' },
       ],
     },
     {
       title: 'Management',
       links: [
-        { name: 'Catalog Services', href: '/services' },
-        { name: 'Preferences Settings', href: '/settings' },
-        { name: 'Profile Admin', href: '/settings' },
+        { name: 'Settings & Preferences', href: '/settings' },
+        { name: 'User Profile', href: '/settings' },
       ],
     },
   ]
 
   return (
-    <footer className="bg-white border-t border-gray-200 text-gray-600 mt-auto">
+    <footer className="bg-white border-t border-gray-200 text-gray-600 mt-auto font-sans">
       <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
           
           {/* Brand/Bio Information Column */}
           <div className="space-y-4 xl:col-span-1">
             <Link to="/dashboard" className="flex items-center gap-2">
-              <span className="text-xl">💸</span>
-              <span className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-indigo-600 to-violet-600 bg-clip-text text-transparent">
-                SubManager
+              <span className="text-xl">📚</span>
+              <span className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
+                NoteSpace
               </span>
             </Link>
             <p className="text-sm text-gray-500 max-w-xs">
-              Take back control of your financial footprints. Keep track of recurring subscriptions, trial alerts, and monthly budget logs seamlessly.
+              Organize subjects, structure topics, and write clean Markdown notes. Keep your study materials structured and accessible in one unified workspace.
             </p>
           </div>
 
@@ -53,9 +52,9 @@ export default function Footer() {
                       <li key={link.name}>
                         <Link
                           to={link.href}
-                          className="text-sm text-gray-500 hover:text-indigo-600 transition-colors duration-150"
+                          className="text-sm text-gray-500 hover:text-brand-primary transition-colors duration-150"
                         >
-                          {section.name}
+                          {link.name}
                         </Link>
                       </li>
                     ))}
@@ -69,7 +68,7 @@ export default function Footer() {
         {/* Bottom Metadata Border Block */}
         <div className="mt-12 border-t border-gray-100 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-400">
-            &copy; {currentYear} SubManager Inc. All rights reserved.
+            &copy; {currentYear} NoteSpace Inc. All rights reserved.
           </p>
           
           {/* External Social / Repo Links Stub */}

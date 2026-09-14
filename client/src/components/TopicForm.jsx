@@ -1,11 +1,11 @@
 // src/components/TopicForm.jsx
 import { useState } from 'react'
 import { Field, Label, Input, Textarea, Select } from '@headlessui/react'
-import { createSubjectSlice } from '../store/slices/subjectSlice'
+import { useAppStore } from '../store'
 
 export default function TopicForm({ subjectId, initialData = null, onCancel, onSuccess }) {
   const isEditMode = !!initialData
-  const { createTopic, updateTopic, loading, error } = createSubjectSlice()
+  const { createTopic, updateTopic, loading, error } = useAppStore()
 
   const [formData, setFormData] = useState({
     title: initialData?.title || '',

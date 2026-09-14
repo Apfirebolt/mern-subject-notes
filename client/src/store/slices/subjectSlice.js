@@ -1,7 +1,7 @@
 // src/store/subjectSlice.js
-import axios from 'axios';
+import httpClient from '../../plugins/interceptor';
 
-const API_BASE = '/api/subjects';
+const API_BASE = '/subjects';
 
 export const createSubjectSlice = (set, get) => ({
   subjects: [],
@@ -16,7 +16,7 @@ export const createSubjectSlice = (set, get) => ({
   fetchSubjects: async () => {
     set({ loading: true, error: null });
     try {
-      const { data } = await axios.get(API_BASE);
+      const { data } = await httpClient.get(API_BASE);
       set({ subjects: data, loading: false });
     } catch (err) {
       set({ error: err.response?.data?.message || err.message, loading: false });
@@ -26,7 +26,7 @@ export const createSubjectSlice = (set, get) => ({
   fetchSubjectById: async (subjectId) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await axios.get(`${API_BASE}/${subjectId}`);
+      const { data } = await httpClient.get(`${API_BASE}/${subjectId}`);
       set({ currentSubject: data, loading: false });
     } catch (err) {
       set({ error: err.response?.data?.message || err.message, loading: false });
@@ -36,7 +36,7 @@ export const createSubjectSlice = (set, get) => ({
   createSubject: async (subjectData) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await axios.post(API_BASE, subjectData);
+      const { data } = await httpClient.post(API_BASE, subjectData);
       set((state) => ({
         subjects: [...state.subjects, data],
         loading: false,
@@ -51,7 +51,7 @@ export const createSubjectSlice = (set, get) => ({
   updateSubject: async (subjectId, updateData) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await axios.put(`${API_BASE}/${subjectId}`, updateData);
+      const { data } = await httpClient.put(`${API_BASE}/${subjectId}`, updateData);
       set((state) => ({
         subjects: state.subjects.map((sub) => (sub._id === subjectId ? data : sub)),
         currentSubject: state.currentSubject?._id === subjectId ? data : state.currentSubject,
@@ -67,7 +67,7 @@ export const createSubjectSlice = (set, get) => ({
   deleteSubject: async (subjectId) => {
     set({ loading: true, error: null });
     try {
-      await axios.delete(`${API_BASE}/${subjectId}`);
+      await httpClient.delete(`${API_BASE}/${subjectId}`);
       set((state) => ({
         subjects: state.subjects.filter((sub) => sub._id !== subjectId),
         currentSubject: state.currentSubject?._id === subjectId ? null : state.currentSubject,
@@ -86,7 +86,7 @@ export const createSubjectSlice = (set, get) => ({
   createTopic: async (subjectId, topicData) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await axios.post(`${API_BASE}/${subjectId}/topics`, topicData);
+      const { data } = await httpClient.post(`${API_BASE}/${subjectId}/topics`, topicData);
       set((state) => {
         const updateSub = (sub) => {
           if (sub._id !== subjectId) return sub;
@@ -109,7 +109,7 @@ export const createSubjectSlice = (set, get) => ({
   updateTopic: async (subjectId, topicId, updateData) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await axios.put(`${API_BASE}/${subjectId}/topics/${topicId}`, updateData);
+      const { data } = await httpClient.put(`${API_BASE}/${subjectId}/topics/${topicId}`, updateData);
       set((state) => {
         const updateSub = (sub) => {
           if (sub._id !== subjectId) return sub;
@@ -135,7 +135,7 @@ export const createSubjectSlice = (set, get) => ({
   deleteTopic: async (subjectId, topicId) => {
     set({ loading: true, error: null });
     try {
-      await axios.delete(`${API_BASE}/${subjectId}/topics/${topicId}`);
+      await httpClient.delete(`${API_BASE}/${subjectId}/topics/${topicId}`);
       set((state) => {
         const updateSub = (sub) => {
           if (sub._id !== subjectId) return sub;
@@ -164,7 +164,7 @@ export const createSubjectSlice = (set, get) => ({
   createNote: async (subjectId, topicId, noteData) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await axios.post(
+      const { data } = await httpClient.post(
         `${API_BASE}/${subjectId}/topics/${topicId}/notes`,
         noteData
       );
@@ -197,7 +197,7 @@ export const createSubjectSlice = (set, get) => ({
   updateNote: async (subjectId, topicId, noteId, updateData) => {
     set({ loading: true, error: null });
     try {
-      const { data } = await axios.put(
+      const { data } = await httpClient.put(
         `${API_BASE}/${subjectId}/topics/${topicId}/notes/${noteId}`,
         updateData
       );
@@ -233,7 +233,7 @@ export const createSubjectSlice = (set, get) => ({
   deleteNote: async (subjectId, topicId, noteId) => {
     set({ loading: true, error: null });
     try {
-      await axios.delete(
+      await httpClient.delete(
         `${API_BASE}/${subjectId}/topics/${topicId}/notes/${noteId}`
       );
 
