@@ -9,7 +9,9 @@ import {
   addTopicToSubject,
   addNoteToTopic,
   deleteTopicFromSubject,
-  updateTopicFromSubject
+  updateTopicFromSubject,
+  deleteNoteFromTopic,
+  updateNoteFromTopic
 } from '../controllers/subjectController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -249,5 +251,76 @@ router.route('/:id/topics/:topicId').put(protect, updateTopicFromSubject);
  *         description: Subject or Topic not found
  */
 router.route('/:subjectId/topics/:topicId/notes').post(protect, addNoteToTopic);
+
+/**
+ * @swagger
+ * /api/subjects/{subjectId}/topics/{topicId}/notes/{noteId}:
+ *   delete:
+ *     summary: Delete a note from a specific topic
+ *     tags: [Subjects]
+ *     parameters:
+ *       - in: path
+ *         name: subjectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: topicId
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: noteId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       204:
+ *         description: Note deleted successfully
+ *       404:
+ *         description: Subject, Topic, or Note not found
+ *   put:
+ *     summary: Update a note from a specific topic
+ *     tags: [Subjects]
+ *     parameters:
+ *       - in: path
+ *         name: subjectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: topicId
+ *         required: true
+ *         schema:
+ *           type: string
+ *       - in: path
+ *         name: noteId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - heading
+ *               - content
+ *             properties:
+ *               heading:
+ *                 type: string
+ *                 example: Limits Definition
+ *               content:
+ *                 type: string
+ *                 example: "# Limits\nA limit is the value that a function approaches..."
+ *     responses:
+ *       200:
+ *         description: Note updated successfully
+ *       404:
+ *         description: Subject, Topic, or Note not found
+ */
+
+router.route('/:subjectId/topics/:topicId/notes/:noteId').delete(protect, deleteNoteFromTopic).put(protect, updateNoteFromTopic);
 
 export default router;

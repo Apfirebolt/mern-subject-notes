@@ -187,6 +187,66 @@ const addNoteToTopic = asyncHandler(async (req, res) => {
   res.status(201).json(subject);
 });
 
+// @desc    Delete a markdown note from a topic
+// @route   DELETE /api/subjects/:id/topics/:topicId/notes/:noteId
+// @access  Private
+const deleteNoteFromTopic = asyncHandler(async (req, res) => {
+  const subject = await Subject.findById(req.params.id);
+
+  if (!subject) {
+    res.status(404);
+    throw new Error("Subject not found");
+  }
+
+  const topic = subject.topics.id(req.params.topicId);
+  if (!topic) {
+    res.status(404);
+    throw new Error("Topic not found");
+  }
+
+  const note = topic.notes.id(req.params.noteId);
+  if (!note) {
+    res.status(404);
+    throw new Error("Note not found");
+  }
+
+  await note.deleteOne();
+  await subject.save();
+
+  res.status(204).end();
+});
+
+// @desc    Update a markdown note from a topic
+// @route   PUT /api/subjects/:id/topics/:topicId/notes/:noteId
+// @access  Private
+const updateNoteFromTopic = asyncHandler(async (req, res) => {
+  const { heading, content } = req.body;
+  const subject = await Subject.findById(req.params.id);
+
+  if (!subject) {
+    res.status(404);
+    throw new Error("Subject not found");
+  }
+
+  const topic = subject.topics.id(req.params.topicId);
+  if (!topic) {
+    res.status(404);
+    throw new Error("Topic not found");
+  }
+
+  const note = topic.notes.id(req.params.noteId);
+  if (!note) {
+    res.status(404);
+    throw new Error("Note not found");
+  }
+
+  note.heading = heading || note.heading;
+  note.content = content || note.content;
+  await subject.save();
+
+  res.json(subject);
+});
+
 export {
   createSubject,
   getSubjects,
@@ -195,6 +255,8 @@ export {
   deleteSubject,
   addTopicToSubject,
   addNoteToTopic,
+  deleteNoteFromTopic,
+  updateNoteFromTopic,
   deleteTopicFromSubject,
   updateTopicFromSubject,
 };

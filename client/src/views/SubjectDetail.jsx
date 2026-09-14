@@ -18,6 +18,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useAppStore } from "../store";
 import TopicForm from "../components/TopicForm";
+import NoteForm from "../components/NoteForm";
 
 export default function SubjectDetail() {
   const { subjectId } = useParams();
@@ -35,6 +36,11 @@ export default function SubjectDetail() {
 
   const [isTopicModalOpen, setIsTopicModalOpen] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState(null);
+
+  // Note Modal States
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
+  const [activeTopicForNote, setActiveTopicForNote] = useState(null);
+  const [selectedNote, setSelectedNote] = useState(null);
 
   // Accordion state to toggle open/closed topics
   const [expandedTopics, setExpandedTopics] = useState({});
@@ -62,6 +68,18 @@ export default function SubjectDetail() {
     setIsTopicModalOpen(true);
   };
 
+  const handleOpenAddNote = (topic) => {
+    setActiveTopicForNote(topic);
+    setSelectedNote(null);
+    setIsNoteModalOpen(true);
+  };
+
+  const handleOpenEditNote = (topic, note) => {
+    setActiveTopicForNote(topic);
+    setSelectedNote(note);
+    setIsNoteModalOpen(true);
+  };
+
   const handleDeleteSubject = async () => {
     if (window.confirm(`Are you sure you want to delete "${currentSubject?.name}"?`)) {
       try {
@@ -76,7 +94,6 @@ export default function SubjectDetail() {
   const handleDeleteTopic = async (topicId, topic) => {
     if (window.confirm(`Delete topic "${topic.topicName}" and all its notes?`)) {
       try {
-        console.log('Deleting topic for subject ID:', subjectId, 'with topic ID:', topic._id);
         await deleteTopic(subjectId, topicId);
       } catch (err) {
         console.error("Failed to delete topic:", err);
@@ -128,11 +145,9 @@ export default function SubjectDetail() {
         {currentSubject && (
           <div className="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700">
-                  Curriculum Hub
-                </span>
-              </div>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700">
+                Curriculum Hub
+              </span>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 font-montserrat">
                 {currentSubject.name}
               </h1>
@@ -210,6 +225,15 @@ export default function SubjectDetail() {
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
+                      <button
+                        onClick={() => handleOpenAddNote(topic)}
+                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition cursor-pointer"
+                        title="Add Note"
+                      >
+                        <PlusIcon className="w-3.5 h-3.5" />
+                        <span>Add Note</span>
+                      </button>
+
                       <button
                         onClick={() => handleOpenEditTopic(topic)}
                         className="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition"
@@ -330,6 +354,50 @@ export default function SubjectDetail() {
                     fetchSubjectById(subjectId);
                   }}
                 />
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </Dialog>
+      </Transition>
+
+      {/* Note Create/Edit Modal */}
+      <Transition show={isNoteModalOpen} as={Fragment}>
+        <Dialog onClose={() => setIsNoteModalOpen(false)} className="relative z-50">
+          <TransitionChild
+            as={Fragment}
+            enter="ease-out duration-200"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-150"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs" />
+          </TransitionChild>
+
+          <div className="fixed inset-0 z-10 w-screen overflow-y-auto p-4 flex items-center justify-center">
+            <TransitionChild
+              as={Fragment}
+              enter="ease-out duration-200"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-150"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <DialogPanel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white shadow-2xl border border-slate-100">
+                {activeTopicForNote && (
+                  <NoteForm
+                    subjectId={subjectId}
+                    topicId={activeTopicForNote._id || activeTopicForNote.id}
+                    initialData={selectedNote}
+                    onCancel={() => setIsNoteModalOpen(false)}
+                    onSuccess={() => {
+                      setIsNoteModalOpen(false);
+                      fetchSubjectById(subjectId);
+                    }}
+                  />
+                )}
               </DialogPanel>
             </TransitionChild>
           </div>
