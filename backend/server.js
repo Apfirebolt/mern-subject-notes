@@ -6,18 +6,17 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
-
 import authRoutes from "./routes/authRoutes.js";
 import subjectRoutes from "./routes/subjectRoutes.js";
-
-dotenv.config();
 import { connectDB } from "./config/db.js";
 
-const port = process.env.PORT || 5000;
-
-connectDB();
+dotenv.config();
 
 const app = express();
+const port = process.env.PORT || 5000;
+
+// Connect to MongoDB
+connectDB();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -35,8 +34,10 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${port}`,
-        description: "Development server",
+        url: process.env.NODE_ENV === 'production' 
+          ? 'https://your-app.vercel.app' 
+          : `http://localhost:${port}`,
+        description: process.env.NODE_ENV === 'production' ? 'Production server' : 'Development server',
       },
     ],
   },
@@ -47,36 +48,32 @@ const swaggerOptions = {
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
-
-// Swagger Documentation Route
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Option 1: Allow requests from port 3000 only
+// CORS Configuration
 const corsOptions = {
   origin: ['http://localhost:3000', 'http://localhost:5000', 'http://localhost'],
   optionsSuccessStatus: 200,
+  credentials: true,
 };
-
 app.use(cors(corsOptions));
 
+// API Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/subjects", subjectRoutes);
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'dist')));
-
-  app.get('/*splat', (req, res) =>
-    res.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
-  );
-} else {
-  app.get('/', (req, res) => {
-    res.send('API is running....');
-  });
-}
+app.get('/', (req, res) => {
+  res.send('API is running....');
+});
 
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(port, () =>
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${port}`)
-);
+// Conditionally listen locally for development; export app for Vercel serverless execution
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(port, () =>
+    console.log(`Server running in development mode on port ${port}`)
+  );
+}
+
+export default app;

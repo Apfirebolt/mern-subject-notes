@@ -12,7 +12,8 @@
     "server": "nodemon backend/server",
     "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "vercel-build": "echo 'Skipping frontend build, using pre-built dist'"
+    "build": "cd client && npm install && npm run build",
+    "vercel-build": "cd client && npm install && npm run build"
   },
   "keywords": [],
   "author": "Apfirebolt",
