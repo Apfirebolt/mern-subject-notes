@@ -1,7 +1,12 @@
+
+
+// src/api/httpClient.js
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const baseUrl = 'http://localhost:5000/api/';
+const baseUrl = import.meta.env.MODE === 'production' 
+  ? '/api/' 
+  : 'http://localhost:5000/api/';
 
 const httpClient = axios.create({
   baseURL: baseUrl,
@@ -18,16 +23,13 @@ httpClient.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 httpClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Handle unauthorized access, e.g., redirect to login
       window.location.href = '/login';
     }
     return Promise.reject(error);

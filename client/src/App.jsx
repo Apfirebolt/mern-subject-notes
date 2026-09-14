@@ -42,12 +42,6 @@ export default function App() {
               <Link to="/dashboard" className={linkClass("/dashboard")}>
                 Dashboard
               </Link>
-              <Link to="/budget" className={linkClass("/budget")}>
-                Budget
-              </Link>
-              <Link to="/people" className={linkClass("/people")}>
-                People
-              </Link>
               <Link to="/settings" className={linkClass("/settings")}>
                 Settings
               </Link>
