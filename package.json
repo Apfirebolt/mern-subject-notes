@@ -1,12 +1,11 @@
 {
   "name": "mern-subject-notes",
   "version": "1.0.0",
-  "description": "",
+  "description": "MERN stack application for managing subject notes",
   "main": "index.js",
   "type": "module",
   "engines": {
-    "node": "14.15.0",
-    "npm": "6.14.8"
+    "node": "24.x"
   },
   "scripts": {
     "start": "node backend/server",
