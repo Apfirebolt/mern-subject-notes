@@ -10,10 +10,8 @@
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
-    "install-client": "cd client && npm install",
-    "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "vercel-build": "cd client && npm install && npm run build"
+    "vercel-build": "echo 'Skipping frontend build, using pre-built dist'"
   },
   "keywords": [],
   "author": "Apfirebolt",
