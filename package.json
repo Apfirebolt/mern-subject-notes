@@ -12,8 +12,8 @@
     "server": "nodemon backend/server",
     "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "build": "npm install && cd client && npm install && npm run build",
-    "vercel-build": "npm install && cd client && npm install && npm run build"
+    "build": "echo 'Root build handled by Vercel builders'",
+    "vercel-build": "echo 'Vercel builders handle subdirectories automatically'"
   },
   "keywords": [],
   "author": "Apfirebolt",
