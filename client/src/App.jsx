@@ -4,6 +4,7 @@ import Login from "./views/Login";
 import Footer from "./components/FooterComponent";
 import Register from "./views/Register";
 import Dashboard from "./views/Dashboard";
+import SubjectDetail from "./views/SubjectDetail";
 import { ToastContainer } from "react-toastify";
 import { useAppStore } from "./store";
 
@@ -24,9 +25,8 @@ export default function App() {
   };
 
   const logOut = () => {
-    console.log("Logging out user...");
-    logoutUser(); // Triggers localStorage wipe and store state reset
-    navigate("/login"); // 4. Instantly redirect browser context back to security checkpoint
+    logoutUser();
+    navigate("/login");
   };
 
   return (
@@ -36,17 +36,11 @@ export default function App() {
         <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
             <h1 className="text-xl font-bold tracking-tight text-gray-900 flex items-center gap-2">
-              💸 <span className="hidden sm:inline">Subscription Manager</span>
+              💸 <span className="hidden sm:inline">Notespace</span>
             </h1>
             <nav className="flex space-x-1 sm:space-x-2 items-center">
               <Link to="/dashboard" className={linkClass("/dashboard")}>
                 Dashboard
-              </Link>
-              <Link to="/services" className={linkClass("/services")}>
-                Services
-              </Link>
-              <Link to="/subscriptions" className={linkClass("/subscriptions")}>
-                Subscriptions
               </Link>
               <Link to="/budget" className={linkClass("/budget")}>
                 Budget
@@ -84,6 +78,7 @@ export default function App() {
           <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm min-h-[400px]">
             <Routes>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/subjects/:id" element={<SubjectDetail />} />
             </Routes>
           </div>
         )}
