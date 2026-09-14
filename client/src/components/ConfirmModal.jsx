@@ -10,7 +10,6 @@ const ConfirmModal = ({
   isDestructive = false 
 }) => {
   
-  // Close modal on 'Escape' key press
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape') onCancel();

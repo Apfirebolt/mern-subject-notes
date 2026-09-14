@@ -41,14 +41,20 @@ export default function Header() {
             <Link className="flex items-center gap-2 group" to="/dashboard">
               <span className="text-2xl" aria-hidden="true">📚</span>
               <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
-                NoteSpace
+                Note Space
               </span>
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
               {navigation.map((item) => (
-                <Link ${ 'text-brand-primary 'text-gray-600 : ? className="{`text-sm" duration-200 font-medium font-semibold' hover:text-gray-900' isCurrent(item.href) key="{item.name}" to="{item.href}" transition-colors }`}>
+                <Link
+                  className={`text-sm font-medium transition-colors duration-200 ${
+                    isCurrent(item.href) ? 'text-brand-primary' : 'text-gray-600 hover:text-gray-900'
+                  }`}
+                  key={item.name}
+                  to={item.href}
+                >
                   {item.name}
                 </Link>
               ))}

@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
+    "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "vercel-build": "echo 'Skipping frontend build, using pre-built dist'"
   },

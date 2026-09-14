@@ -36,7 +36,7 @@ export default function App() {
         <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
           <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
             <h1 className="text-xl font-bold tracking-tight text-gray-900 flex items-center gap-2">
-              💸 <span className="hidden sm:inline">Notespace</span>
+              💸 <span className="hidden sm:inline">Note space</span>
             </h1>
             <nav className="flex space-x-1 sm:space-x-2 items-center">
               <Link to="/dashboard" className={linkClass("/dashboard")}>

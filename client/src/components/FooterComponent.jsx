@@ -31,7 +31,7 @@ export default function Footer() {
             <Link to="/dashboard" className="flex items-center gap-2">
               <span className="text-xl">📚</span>
               <span className="text-lg font-extrabold tracking-tight bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent">
-                NoteSpace
+                Note Space
               </span>
             </Link>
             <p className="text-sm text-gray-500 max-w-xs">
