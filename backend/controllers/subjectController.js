@@ -163,7 +163,7 @@ const updateTopicFromSubject = asyncHandler(async (req, res) => {
 // @access  Private
 const addNoteToTopic = asyncHandler(async (req, res) => {
   const { heading, content } = req.body;
-  const subject = await Subject.findById(req.params.id);
+  const subject = await Subject.findById(req.params.subjectId);
 
   if (!subject) {
     res.status(404);
@@ -191,7 +191,7 @@ const addNoteToTopic = asyncHandler(async (req, res) => {
 // @route   DELETE /api/subjects/:id/topics/:topicId/notes/:noteId
 // @access  Private
 const deleteNoteFromTopic = asyncHandler(async (req, res) => {
-  const subject = await Subject.findById(req.params.id);
+  const subject = await Subject.findById(req.params.subjectId);
 
   if (!subject) {
     res.status(404);
@@ -221,7 +221,7 @@ const deleteNoteFromTopic = asyncHandler(async (req, res) => {
 // @access  Private
 const updateNoteFromTopic = asyncHandler(async (req, res) => {
   const { heading, content } = req.body;
-  const subject = await Subject.findById(req.params.id);
+  const subject = await Subject.findById(req.params.subjectId);
 
   if (!subject) {
     res.status(404);

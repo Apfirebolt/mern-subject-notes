@@ -1,17 +1,25 @@
 // src/components/TopicForm.jsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Field, Label, Input, Textarea } from '@headlessui/react'
 import { useAppStore } from '../store'
 
-export default function TopicForm({ subjectId, initialData = null, onCancel, onSuccess }) {
-  const isEditMode = !!initialData
+export default function TopicForm({ subjectId, initialData, onCancel, onSuccess }) {
+  const isEditMode = Boolean(initialData)
   const { createTopic, updateTopic, loading, error } = useAppStore()
 
-  console.log('Subject ID', subjectId)
   const [formData, setFormData] = useState({
-    topicName: initialData?.title || '',
-    topicDescription: initialData?.description || '',
+    topicName: initialData?.topicName ?? '',
+    topicDescription: initialData?.topicDescription ?? '',
   })
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData({
+        topicName: initialData.topicName ?? '',
+        topicDescription: initialData.topicDescription ?? '',
+      })
+    }
+  }, [initialData])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -20,22 +28,19 @@ export default function TopicForm({ subjectId, initialData = null, onCancel, onS
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
     try {
+      const topicId = initialData?._id ?? initialData?.id
+      
       if (isEditMode) {
-        await updateTopic(subjectId, initialData._id || initialData.id, {
-          topicName: formData.topicName,
-          topicDescription: formData.topicDescription,
-        })
+        await updateTopic(subjectId, topicId, formData)
       } else {
-        await createTopic(subjectId, {
-          topicName: formData.topicName,
-          topicDescription: formData.topicDescription,
-        })
+        await createTopic(subjectId, formData)
       }
 
-      if (onSuccess) onSuccess()
+      onSuccess?.()
     } catch (err) {
-      console.error('Topic form submission halted:', err)
+      console.error('Topic form submission failed:', err)
     }
   }
 
@@ -53,14 +58,12 @@ export default function TopicForm({ subjectId, initialData = null, onCancel, onS
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        {/* Backend Error Block */}
         {error && (
           <div className="rounded-xl bg-red-50 p-4 border border-red-100">
             <p className="text-xs font-semibold text-red-800">Error: {error}</p>
           </div>
         )}
 
-        {/* Topic Title */}
         <Field className="space-y-1">
           <Label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider">
             Topic Title <span className="text-red-500">*</span>
@@ -76,7 +79,6 @@ export default function TopicForm({ subjectId, initialData = null, onCancel, onS
           />
         </Field>
 
-        {/* Topic Description */}
         <Field className="space-y-1">
           <Label className="block text-xs font-semibold text-gray-600 uppercase tracking-wider">
             Summary & Scope
@@ -91,7 +93,6 @@ export default function TopicForm({ subjectId, initialData = null, onCancel, onS
           />
         </Field>
 
-        {/* Form Actions */}
         <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-50 mt-6">
           {onCancel && (
             <button
