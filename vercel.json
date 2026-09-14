@@ -12,8 +12,12 @@
       "dest": "backend/server.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "backend/server.js"
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/[^.]+",
+      "destination": "/index.html"
     }
   ]
 }
