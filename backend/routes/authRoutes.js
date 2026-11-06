@@ -3,9 +3,11 @@ import {
   authUser,
   registerUser,
   getUsers,
+  getProfile,
 } from "../controllers/authController.js";
 
 const router = express.Router();
+import { protect } from "../middleware/authMiddleware.js"; 
 
 /**
  * @swagger
@@ -92,5 +94,67 @@ router.route("/").post(registerUser).get(getUsers);
  *         description: Invalid email or password.
  */
 router.post("/login", authUser);
+
+/**
+ * @swagger
+ * /api/auth/profile:
+ *   get:
+ *     summary: Get the profile of the authenticated user
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Returns the profile of the authenticated user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 username:
+ *                   type: string
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 isAdmin:
+ *                   type: boolean
+ *       401:
+ *         description: Unauthorized.
+ */
+router.get("/profile", protect, getProfile);
+
+/**
+ * @swagger
+ * /api/auth/users:
+ *   get:
+ *     summary: Get all users
+ *     tags: [Authentication]
+ *     responses:
+ *       200:
+ *         description: Returns a list of all users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   username:
+ *                     type: string
+ *                   firstName:
+ *                     type: string
+ *                   lastName:
+ *                     type: string
+ *                   email:
+ *                     type: string
+ *                   isAdmin:
+ *                     type: boolean
+ */
+router.get("/users", getUsers);
 
 export default router;

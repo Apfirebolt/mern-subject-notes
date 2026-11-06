@@ -3,7 +3,7 @@ import generateToken from '../utils/generateToken.js';
 import User from '../models/User.js';
 
 // @desc    Auth user & get token
-// @route   POST /api/users/auth
+// @route   POST /api/auth/login
 // @access  Public
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -27,7 +27,7 @@ const authUser = asyncHandler(async (req, res) => {
 });
 
 // @desc    Register a new user
-// @route   POST /api/users
+// @route   POST /api/auth/register
 // @access  Public
 const registerUser = asyncHandler(async (req, res) => {
   const { username, firstName, lastName, email, password } = req.body;
@@ -73,17 +73,37 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 
+// @desc    Get user by ID
+// @route   GET /api/auth/profile
+// @access  Private/
+const getProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (user) {
+    res.json({
+      _id: user._id,
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      isAdmin: user.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
 // @desc    Get all users
-// @route   GET /api/users
-// @access  Private/Admin
+// @route   GET /api/auth/users
+// @access  Public
 const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find({});
   res.json(users);
 });
 
-
 export {
   authUser,
   registerUser,
+  getProfile,
   getUsers,
 };

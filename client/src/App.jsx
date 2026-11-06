@@ -4,6 +4,7 @@ import Login from "./views/Login";
 import Footer from "./components/FooterComponent";
 import Register from "./views/Register";
 import Dashboard from "./views/Dashboard";
+import Settings from "./views/Settings";
 import SubjectDetail from "./views/SubjectDetail";
 import { ToastContainer } from "react-toastify";
 import { useAppStore } from "./store";
@@ -72,6 +73,7 @@ export default function App() {
           <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm min-h-[400px]">
             <Routes>
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/settings" element={<Settings />} />
               <Route path="/subjects/:subjectId" element={<SubjectDetail />} />
             </Routes>
           </div>
