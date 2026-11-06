@@ -35,7 +35,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-sm text-gray-500 max-w-xs">
-              Organize subjects, structure topics, and write clean Markdown notes. Keep your study materials structured and accessible in one unified workspace.
+              Organize subjects, structure topics, and write clean Markdown notes. Keep your study materials structured and accessible.
             </p>
           </div>
 

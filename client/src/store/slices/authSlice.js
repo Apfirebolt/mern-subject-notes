@@ -94,7 +94,7 @@ export const createAuthSlice = (set, get) => {
         }
 
         const response = await httpClient.get(
-          "profile",
+          "auth/profile",
           {
             headers: { Authorization: `Bearer ${token}` },
           },
@@ -118,7 +118,7 @@ export const createAuthSlice = (set, get) => {
         }
 
         const response = await httpClient.put(
-          "http://localhost:8000/api/profile",
+          "http://localhost:8000/api/auth/profile",
           updatedData,
           {
             headers: { Authorization: `Bearer ${token}` },

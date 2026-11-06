@@ -93,6 +93,59 @@ const getProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Update user profile
+// @route   PUT /api/auth/profile
+// @access  Private
+
+const updateProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    user.username = req.body.username || user.username;
+    user.firstName = req.body.firstName || user.firstName;
+    user.lastName = req.body.lastName || user.lastName;
+    user.email = req.body.email || user.email;
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      username: updatedUser.username,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// @desc    Update user password
+// @route   PUT /api/auth/change-password
+// @access  Private
+
+const changePassword = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  if (user) {
+    const { current_password, new_password } = req.body;
+
+    if (!(await user.matchPassword(current_password))) {
+      res.status(400);
+      throw new Error('Current password is incorrect');
+    }
+
+    user.password = new_password;
+    await user.save();
+    res.json({ message: 'Password updated successfully' });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
 // @desc    Get all users
 // @route   GET /api/auth/users
 // @access  Public
@@ -101,9 +154,13 @@ const getUsers = asyncHandler(async (req, res) => {
   res.json(users);
 });
 
+
+
 export {
   authUser,
   registerUser,
   getProfile,
   getUsers,
+  updateProfile,
+  changePassword,
 };

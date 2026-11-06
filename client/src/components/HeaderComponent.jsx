@@ -1,4 +1,3 @@
-// src/components/Header.jsx
 import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
@@ -44,6 +43,11 @@ export default function Header() {
                 Note Space
               </span>
             </Link>
+
+            {/* Hello user */}
+            <p className="hidden md:block text-sm font-medium text-gray-700">
+              Hello, {user?.username || 'User'}
+            </p>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-6">
@@ -115,13 +119,37 @@ export default function Header() {
 
       {/* Mobile Dropdown Panel */}
       {mobileMenuOpen && (
-        <nav className="md:hidden border-b border-gray-200 bg-white px-4 pt-2 pb-4 space-y-1">
-          {navigation.map((item) => (
-            <Link ${ 'bg-purple-50 'text-gray-600 : ? className="{`block" font-medium font-semibold' hover:bg-gray-50' isCurrent(item.href) key="{item.name}" px-3 py-2.5 rounded-xl text-base text-brand-primary to="{item.href}" transition-colors }`}>
-              {item.name}
-            </Link>
-          ))}
-        </nav>
+        <div className="md:hidden border-b border-gray-200 bg-white px-4 pt-3 pb-4 space-y-3">
+          {/* User Info Header in Mobile Menu */}
+          {user && (
+            <div className="flex items-center gap-3 px-3 py-2 bg-gray-50 rounded-xl border border-gray-100">
+              <div className="h-9 w-9 rounded-full bg-brand-primary text-white flex items-center font-semibold justify-center text-sm shadow-xs">
+                {userInitial}
+              </div>
+              <div className="overflow-hidden">
+                <p className="text-sm font-semibold text-gray-900 truncate">{user?.username || 'User'}</p>
+                <p className="text-xs text-gray-500 truncate">{user?.email || 'user@example.com'}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Mobile Navigation Links */}
+          <nav className="space-y-1">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={`block px-3 py-2.5 rounded-xl text-base font-medium transition-colors ${
+                  isCurrent(item.href)
+                    ? 'bg-purple-50 text-brand-primary font-semibold'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }`}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </nav>
+        </div>
       )}
     </header>
   )

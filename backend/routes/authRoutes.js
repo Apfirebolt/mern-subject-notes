@@ -4,6 +4,8 @@ import {
   registerUser,
   getUsers,
   getProfile,
+  updateProfile,
+  changePassword
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -98,6 +100,45 @@ router.post("/login", authUser);
 /**
  * @swagger
  * /api/auth/profile:
+ *   security:
+ *     - bearerAuth: []
+ *   parameters:
+ *     - in: header
+ *       name: Authorization
+ *       schema:
+ *         type: string
+ *       required: true
+ *       description: Bearer token for authentication
+ *   put:
+ *     summary: Update the profile of the authenticated user
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               firstName:
+ *                 type: string
+ *               lastName:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: john@example.com
+ *               isAdmin:
+ *                 type: boolean
+ *                 example: false
+ *     responses:
+ *       200:
+ *         description: Password changed successfully.
+ *       401:
+ *         description: Unauthorized or invalid current password.
  *   get:
  *     summary: Get the profile of the authenticated user
  *     tags: [Authentication]
@@ -124,7 +165,49 @@ router.post("/login", authUser);
  *       401:
  *         description: Unauthorized.
  */
+router.put("/profile", protect, updateProfile);
 router.get("/profile", protect, getProfile);
+router.put("/change-password", protect, changePassword);
+
+/**
+ * @swagger
+ * /api/auth/change-password:
+ *   put:
+ *     summary: Change the password of the authenticated user
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: header
+ *         name: Authorization
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Bearer token for authentication
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - currentPassword
+ *               - newPassword
+ *             properties:
+ *               currentPassword:
+ *                 type: string
+ *                 format: password
+ *                 example: oldpassword123
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *                 example: newstrongpassword123
+ *     responses:
+ *       200:
+ *         description: Password changed successfully.
+ *       401:
+ *         description: Unauthorized or invalid current password.
+ */
 
 /**
  * @swagger

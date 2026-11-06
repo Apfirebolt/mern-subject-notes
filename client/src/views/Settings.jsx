@@ -91,7 +91,7 @@ const Settings = () => {
         <div>
           <h2 className="text-base font-semibold leading-7 text-gray-900">Profile Information</h2>
           <p className="mt-1 text-sm leading-6 text-gray-500">
-            Update your public user handle, personal identity tokens, and core mailing destination details.
+            Update your public profile details
           </p>
         </div>
 
@@ -175,7 +175,7 @@ const Settings = () => {
         <div>
           <h2 className="text-base font-semibold leading-7 text-gray-900">Security Credentials</h2>
           <p className="mt-1 text-sm leading-6 text-gray-500">
-            Revoke old operational token values and establish a new authorization password checkpoint sequence.
+            Update your password to maintain account security.
           </p>
         </div>
 

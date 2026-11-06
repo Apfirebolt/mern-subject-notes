@@ -77,7 +77,7 @@ const Dashboard = () => {
           <div className="flex items-center gap-2 mb-1">
             <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-100">
               <SparklesIcon className="w-3.5 h-3.5 text-indigo-500" />
-              Active Workspace
+              Active Workspace Amit
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight">
